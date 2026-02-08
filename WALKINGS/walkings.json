@@ -12,22 +12,22 @@
     },
     {
       "id": 2,
-      "name": "veikko",
-      "distance": 4.5,
-      "duration": "23",
-      "pace": "434",
-      "steps": 1222,
-      "calories": 1212,
-      "date": "asd"
+      "name": "s",
+      "distance": 0,
+      "duration": "",
+      "pace": "",
+      "steps": 0,
+      "calories": 0,
+      "date": ""
     },
     {
-      "id": 4,
-      "name": "neljas",
-      "distance": 4.3,
-      "duration": "asd",
-      "pace": "asd",
-      "steps": 232323,
-      "calories": 2323,
+      "id": 3,
+      "name": "asdasda",
+      "distance": 0,
+      "duration": "",
+      "pace": "",
+      "steps": 0,
+      "calories": 0,
       "date": ""
     }
   ]

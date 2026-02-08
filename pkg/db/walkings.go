@@ -42,12 +42,12 @@ func (w *Walkings) PrintAllWalks() {
 		id := fmt.Sprint(color.Yellow, walk.ID, color.Reset)
 		name := fmt.Sprint(color.Green + "\"" + walk.NAME + "\"" + color.Reset)
 		distance := fmt.Sprint(strconv.FormatFloat(walk.DISTANCE, 'f', 2, 64) + " miles" )
-		duration := fmt.Sprint("[DURATION: "+walk.DURATION +"]")
-		pace := fmt.Sprint("[PACE: " + walk.PACE + "]")
-		steps := fmt.Sprint("[STEPS: " + strconv.Itoa(walk.STEPS) + "]")
-		calories := fmt.Sprint("[CALORIES: " + strconv.Itoa(walk.CALORIES) + "]")
+		duration := fmt.Sprint("DURATION: "+walk.DURATION)
+		pace := fmt.Sprint("PACE: " + walk.PACE)
+		steps := fmt.Sprint("STEPS: " + strconv.Itoa(walk.STEPS))
+		calories := fmt.Sprint("CALORIES: " + strconv.Itoa(walk.CALORIES))
 		date := fmt.Sprint(walk.DATE)
-		fmt.Println(id, name,color.Cyan +  distance, duration, pace, steps, calories, date+ color.Reset)
+		fmt.Println(id, name,color.Cyan +  distance + " | ", duration+ " | ", pace+ " | ", steps+ " | ", calories+ " | ", date+ color.Reset)
 	}
 }
 
@@ -62,10 +62,8 @@ func (w *Walkings) PrintStats() {
 		totalsteps += walk.STEPS
 		totalcalories += walk.CALORIES
 	}
-	fmt.Println("------------------------------")
-	fmt.Printf("Total Miles: %f\n", totalmiles)
-	fmt.Printf("Total Steps: %d\n", totalsteps)
-	fmt.Printf("Total Calories: %d\n", totalcalories)
+	fmt.Printf(color.Yellow + "\nTotal Miles: %.2f (%.2fkm) | %d steps | %d calories\n" + color.Reset, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
+	fmt.Println(color.Cyan + "< Add Update Delete Quit >" + color.Reset)
 }
 
 func (w *Walkings) Add(newWalk Walk) error {
@@ -95,25 +93,25 @@ func (w *Walkings) NewID() int {
 func (w *Walkings) Save() error {
 
 	// Format JSON
-	books, err := json.MarshalIndent(w, "", "  ")
+	walks, err := json.MarshalIndent(w, "", "  ")
 	if err != nil {
 		return err
 	}
 
 	// Save
-	err = os.WriteFile(config.LocalPath, books, 0644)
+	err = os.WriteFile(config.LocalPath, walks, 0644)
 	if err != nil {
 		return err
 	}
 
 	// Save Backup
-	err = os.WriteFile(config.BackupPath, books, 0644)
+	err = os.WriteFile(config.BackupPath, walks, 0644)
 	if err != nil {
 		return err
 	}
 
 	// Save Backup with Date
-	err = os.WriteFile(config.BackupPathWithDate, books, 0644)
+	err = os.WriteFile(config.BackupPathWithDate, walks, 0644)
 	if err != nil {
 		return err
 	}
@@ -208,4 +206,13 @@ func (w *Walkings) Update(index int, updatedWalk Walk) error {
 func (w *Walkings) Delete(index int) error {
 	w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
 	return w.Save()
+}
+
+func (w *Walkings) ResetIDs() {
+
+	for key := range w.WALKINGS {
+		w.WALKINGS[key].ID = key + 1
+	}
+
+	w.Save()
 }

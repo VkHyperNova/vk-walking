@@ -63,8 +63,10 @@ func CommandLine(w *db.Walkings) {
 			if err != nil {
 				log.Fatal(err)
 			}
+
+			w.ResetIDs()
 			
-			fmt.Println("Item removed!")
+			fmt.Println("Walk removed!")
 
 		case "q", "quit":
 			util.ClearScreen()
