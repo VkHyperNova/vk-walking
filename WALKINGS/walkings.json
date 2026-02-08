@@ -1,0 +1,14 @@
+{
+  "walkings": [
+    {
+      "id": 1,
+      "name": "asd",
+      "distance": 12,
+      "duration": "12",
+      "pace": "12",
+      "steps": 12,
+      "calories": 12,
+      "date": "asd"
+    }
+  ]
+}
