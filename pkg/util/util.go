@@ -48,14 +48,15 @@ func ClearScreen() {
 	}
 }
 
-func Input(prompt string) string {
+func PromptWithSuggestion(name string, suggestion string) string {
 
 	line := liner.NewLiner()
 	defer line.Close()
 
-	userInput, err := line.Prompt(prompt)
+	input, err := line.PromptWithSuggestion("   "+name+": ", suggestion, -1)
 	if err != nil {
 		panic(err)
 	}
-	return userInput
+
+	return input
 }

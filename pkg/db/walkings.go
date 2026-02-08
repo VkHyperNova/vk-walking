@@ -2,7 +2,9 @@ package db
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"vk-walking/pkg/color"
@@ -86,42 +88,91 @@ func (w *Walkings) Save() error {
 	return nil
 }
 
-func (w *Walkings) UserInput() (Walk, error) {
+func (w *Walkings) UserInput(oldWalk Walk) (Walk, error) {
 
-	// Get Data
-	var answers []string
-	for _, question := range config.Questions {
-		input := util.Input(question)
-		answers = append(answers, input)
-	}
+	// Get Data (strings)
+	name := util.PromptWithSuggestion("Name", oldWalk.NAME)
+	distanceStr := util.PromptWithSuggestion("Distance", strconv.FormatFloat(oldWalk.DISTANCE, 'f', 2, 64))
+	duration := util.PromptWithSuggestion("Duration", oldWalk.DURATION)
+	pace := util.PromptWithSuggestion("Pace", oldWalk.PACE)
+	stepsStr := util.PromptWithSuggestion("Steps", strconv.Itoa(oldWalk.STEPS))
+	caloriesStr := util.PromptWithSuggestion("Calories", strconv.Itoa(oldWalk.CALORIES))
+	date := util.PromptWithSuggestion("Date", oldWalk.DATE)
 
 	// Convert string to float64
-	distance, err := strconv.ParseFloat(answers[1], 64)
+	distance, err := strconv.ParseFloat(distanceStr, 64)
 	if err != nil {
 		return Walk{}, err
 	}
 
 	// Convert string to int
-	steps, err := strconv.Atoi(answers[4])
+	steps, err := strconv.Atoi(stepsStr)
 	if err != nil {
 		return Walk{}, err
 	}
 
-	calories, err := strconv.Atoi(answers[5])
+	calories, err := strconv.Atoi(caloriesStr)
 	if err != nil {
 		return Walk{}, err
 	}
-
 
 	return Walk{
-		ID:       0,
-		NAME:     answers[0],
+		ID:       oldWalk.ID,
+		NAME:     name,
 		DISTANCE: distance,
-		DURATION: answers[2],
-		PACE:     answers[3],
+		DURATION: duration,
+		PACE:     pace,
 		STEPS:    steps,
 		CALORIES: calories,
-		DATE:     answers[6],
+		DATE:     date,
 	}, nil
+}
 
+func (w *Walkings) ReadFromFile(path string) error {
+
+	// Open file
+	file, err := os.Open(path)
+	if err != nil {
+		return fmt.Errorf("error opening file %s: %w", path, err)
+	}
+	defer file.Close()
+
+	// Read entire file contents
+	byteValue, err := io.ReadAll(file)
+	if err != nil {
+		return fmt.Errorf("error reading file %s: %w", path, err)
+	}
+
+	// Unmarshal JSON data
+	if err := json.Unmarshal(byteValue, w); err != nil {
+		return fmt.Errorf("error parsing JSON from file %s: %w", path, err)
+	}
+
+	return nil
+}
+
+func (w *Walkings) FindWalk(id int) (int, Walk, error) {
+	for index, foundWalk := range w.WALKINGS {
+		if foundWalk.ID == id {
+			return index, foundWalk, nil
+		}
+	}
+
+	return -1, Walk{}, errors.New("walk not found")
+}
+
+func (w *Walkings) Update(index int, updatedWalk Walk) error {
+
+	// Set correct ID
+	updatedWalk.ID = w.WALKINGS[index].ID
+
+	// Update
+	w.WALKINGS[index] = updatedWalk
+
+	return w.Save()
+}
+
+func (w *Walkings) Delete(index int) error {
+	w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
+	return w.Save()
 }
