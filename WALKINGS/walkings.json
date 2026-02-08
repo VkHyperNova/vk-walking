@@ -2,18 +2,18 @@
   "walkings": [
     {
       "id": 1,
-      "name": "test1",
-      "distance": 1.2,
-      "duration": "23",
-      "pace": "23",
-      "steps": 1212,
-      "calories": 121212,
-      "date": "today"
+      "name": "Tendropark",
+      "distance": 4.5,
+      "duration": "1:30:12",
+      "pace": "23:23",
+      "steps": 5000,
+      "calories": 600,
+      "date": "08 veebruar 2026"
     },
     {
       "id": 2,
       "name": "veikko",
-      "distance": 0,
+      "distance": 4.5,
       "duration": "23",
       "pace": "434",
       "steps": 1222,
@@ -23,7 +23,7 @@
     {
       "id": 4,
       "name": "neljas",
-      "distance": 0.00223,
+      "distance": 4.3,
       "duration": "asd",
       "pace": "asd",
       "steps": 232323,

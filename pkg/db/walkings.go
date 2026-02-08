@@ -30,9 +30,42 @@ type Walkings struct {
 func (w *Walkings) PrintCLI() {
 
 	// Program information
-	fmt.Println(color.Cyan + "VK-WALKING" + color.Reset)
+	fmt.Println(color.Cyan + "VK-WALKING 1.0" + color.Reset)
 	fmt.Println(color.Cyan + "------------------------" + color.Reset)
+	w.PrintAllWalks()
+	w.PrintStats()
 
+}
+
+func (w *Walkings) PrintAllWalks() {
+	for _, walk := range w.WALKINGS {
+		id := fmt.Sprint(color.Yellow, walk.ID, color.Reset)
+		name := fmt.Sprint(color.Green + "\"" + walk.NAME + "\"" + color.Reset)
+		distance := fmt.Sprint(strconv.FormatFloat(walk.DISTANCE, 'f', 2, 64) + " miles" )
+		duration := fmt.Sprint("[DURATION: "+walk.DURATION +"]")
+		pace := fmt.Sprint("[PACE: " + walk.PACE + "]")
+		steps := fmt.Sprint("[STEPS: " + strconv.Itoa(walk.STEPS) + "]")
+		calories := fmt.Sprint("[CALORIES: " + strconv.Itoa(walk.CALORIES) + "]")
+		date := fmt.Sprint(walk.DATE)
+		fmt.Println(id, name,color.Cyan +  distance, duration, pace, steps, calories, date+ color.Reset)
+	}
+}
+
+func (w *Walkings) PrintStats() {
+
+	totalmiles := 0.0
+	totalsteps := 0
+	totalcalories := 0
+
+	for _, walk := range w.WALKINGS {
+		totalmiles += walk.DISTANCE
+		totalsteps += walk.STEPS
+		totalcalories += walk.CALORIES
+	}
+	fmt.Println("------------------------------")
+	fmt.Printf("Total Miles: %f\n", totalmiles)
+	fmt.Printf("Total Steps: %d\n", totalsteps)
+	fmt.Printf("Total Calories: %d\n", totalcalories)
 }
 
 func (w *Walkings) Add(newWalk Walk) error {
