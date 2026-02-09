@@ -91,6 +91,10 @@ func CommandLine(w *db.Walkings) {
 		case "undo":
 			w.Undo()
 			util.ClearScreen()
+		case "showall":
+			util.ClearScreen()
+			w.PrintAllWalks()
+			util.PressAnyKey()
 
 		case "q", "quit":
 			util.ClearScreen()

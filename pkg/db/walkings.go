@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 	"strconv"
 	"vk-walking/pkg/color"
 	"vk-walking/pkg/config"
@@ -32,11 +33,35 @@ func (w *Walkings) PrintCLI() {
 	// Program information
 	fmt.Println(color.Cyan + "VK-WALKING 1.0" + color.Reset)
 	fmt.Println(color.Cyan + "------------------------" + color.Reset)
-	w.PrintAllWalks()
+	w.PrintTopTen()
 	w.PrintOverallStats()
 	w.PrintStatsByYear()
 	fmt.Println(color.Cyan + "\n< Add Update Delete Quit >" + color.Reset)
 
+}
+
+func (w *Walkings) PrintTopTen() {
+	// Sort descending by distance
+	sort.Slice(w.WALKINGS, func(i, j int) bool {
+		return w.WALKINGS[i].DISTANCE > w.WALKINGS[j].DISTANCE
+	})
+
+	// Determine how many to print (up to 10)
+	n := 10
+	if len(w.WALKINGS) < 10 {
+		n = len(w.WALKINGS)
+	}
+
+	// Print top n
+	for i := 0; i < n; i++ {
+		walk := w.WALKINGS[i]
+		number := fmt.Sprintf("%d. ", i+1)
+		distance := fmt.Sprintf("%s%s%.2f miles(%.2f km)%s | ",color.Blue, color.Bold, walk.DISTANCE, walk.DISTANCE*1.60934, color.Reset)
+		name := fmt.Sprintf(" %s%s%s | ", color.Green, walk.NAME, color.Reset)
+		steps := fmt.Sprintf("%s%d%s steps | ", color.Yellow, walk.STEPS, color.Reset )
+		calories := fmt.Sprintf("%s%d%s calories ", color.Yellow, walk.CALORIES, color.Reset)
+		fmt.Println(number + distance + name + steps + calories)
+	}
 }
 
 func (w *Walkings) PrintAllWalks() {
@@ -89,7 +114,7 @@ func (w *Walkings) PrintStatsByYear() {
 			}
 		}
 
-	fmt.Printf(color.Blue+color.Bold+color.Italic+"\n%d Total Miles: %.2f (%.2fkm) | %d steps | %d calories\n"+color.Reset,year, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
+		fmt.Printf(color.Blue+color.Bold+color.Italic+"\n%d Total Miles: %.2f (%.2fkm) | %d steps | %d calories\n"+color.Reset, year, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
 	}
 }
 
