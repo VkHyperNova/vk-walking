@@ -36,7 +36,7 @@ func (w *Walkings) PrintCLI() {
 	w.PrintTopTen()
 	w.PrintOverallStats()
 	w.PrintStatsByYear()
-	fmt.Println(color.Cyan + "\n< Add Update Delete Quit >" + color.Reset)
+	fmt.Println(color.Cyan + "\n< Add Update Delete showall undo Quit >" + color.Reset)
 
 }
 
@@ -62,23 +62,28 @@ func (w *Walkings) PrintTopTen() {
 		calories := fmt.Sprintf("%s%d%s calories ", color.Yellow, walk.CALORIES, color.Reset)
 		pace := fmt.Sprintf(" %s ", walk.PACE)
 		duration := fmt.Sprintf(" %s ", walk.DURATION)
-		fmt.Println(number + distance + name + steps + calories + pace + duration)
+		fmt.Println(number + distance + steps + calories + pace + duration + name)
 	}
 }
 
 func (w *Walkings) PrintAllWalks() {
-	for _, walk := range w.WALKINGS {
-		id := fmt.Sprint(color.Yellow, walk.ID, color.Reset)
-		name := fmt.Sprint(color.Green + "\"" + walk.NAME + "\"" + color.Reset)
-		distance := fmt.Sprint(strconv.FormatFloat(walk.DISTANCE, 'f', 2, 64) + " miles")
-		duration := fmt.Sprint("DURATION: " + walk.DURATION)
-		pace := fmt.Sprint("PACE: " + walk.PACE)
-		steps := fmt.Sprint("STEPS: " + strconv.Itoa(walk.STEPS))
-		calories := fmt.Sprint("CALORIES: " + strconv.Itoa(walk.CALORIES))
-		date := fmt.Sprint(walk.DATE)
-		fmt.Println(id, name, color.Cyan+color.Italic+distance+" | ", duration+" | ", pace+" | ", steps+" | ", calories+" | ", date+color.Reset)
+	for i, walk := range w.WALKINGS {
+		fmt.Printf(
+			"%d. ID:%d  Distance:%.2f  Duration:%s  Pace:%s  Steps:%d  Calories:%d  Date:%d  Name:%s\n",
+			i+1,
+			walk.ID,
+			walk.DISTANCE,
+			walk.DURATION,
+			walk.PACE,
+			walk.STEPS,
+			walk.CALORIES,
+			walk.DATE,
+			walk.NAME,
+		)
 	}
 }
+
+
 
 func (w *Walkings) PrintOverallStats() {
 
