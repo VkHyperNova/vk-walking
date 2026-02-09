@@ -55,7 +55,7 @@ func (w *Walkings) PrintTopTen() {
 	// Print top n
 	for i := 0; i < n; i++ {
 		walk := w.WALKINGS[i]
-		number := fmt.Sprintf("%d. ", i+1)
+		number := fmt.Sprintf("%d. (ID: %d) ", i+1, walk.ID)
 		distance := fmt.Sprintf("%s%s%.2f miles(%.2f km)%s | ",color.Blue, color.Bold, walk.DISTANCE, walk.DISTANCE*1.60934, color.Reset)
 		name := fmt.Sprintf(" %s%s%s | ", color.Green, walk.NAME, color.Reset)
 		steps := fmt.Sprintf("%s%d%s steps | ", color.Yellow, walk.STEPS, color.Reset )
