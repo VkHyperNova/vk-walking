@@ -20,7 +20,7 @@ type Walk struct {
 	PACE     string  `json:"pace"`
 	STEPS    int     `json:"steps"`
 	CALORIES int     `json:"calories"`
-	DATE     string  `json:"date"`
+	DATE     int     `json:"date"`
 }
 
 type Walkings struct {
@@ -129,7 +129,7 @@ func (w *Walkings) UserInput(oldWalk Walk) (Walk, error) {
 	pace := util.PromptWithSuggestion("Pace", oldWalk.PACE)
 	stepsStr := util.PromptWithSuggestion("Steps", strconv.Itoa(oldWalk.STEPS))
 	caloriesStr := util.PromptWithSuggestion("Calories", strconv.Itoa(oldWalk.CALORIES))
-	date := util.PromptWithSuggestion("Date", oldWalk.DATE)
+	dateStr := util.PromptWithSuggestion("Date", strconv.Itoa(oldWalk.DATE))
 
 	// Convert string to float64
 	distance, err := strconv.ParseFloat(distanceStr, 64)
@@ -144,6 +144,11 @@ func (w *Walkings) UserInput(oldWalk Walk) (Walk, error) {
 	}
 
 	calories, err := strconv.Atoi(caloriesStr)
+	if err != nil {
+		return Walk{}, err
+	}
+
+	date, err := strconv.Atoi(dateStr)
 	if err != nil {
 		return Walk{}, err
 	}
