@@ -2,9 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"log"
-	"os"
-	"strings"
+	"vk-walking/pkg/color"
 	"vk-walking/pkg/db"
 	"vk-walking/pkg/util"
 )
@@ -14,64 +12,92 @@ func CommandLine(w *db.Walkings) {
 
 		w.PrintCLI()
 
-		var userInput string = ""
-		var userInputID int = 0
+		util.PrintArrow()
 
-		fmt.Print("=> ")
+		command, id, ok := util.ReadCommand()
+		if !ok {
+			continue
+		}
 
-		fmt.Scanln(&userInput, &userInputID)
-
-		userInput = strings.ToLower(userInput)
-
-		switch userInput {
+		switch command {
 		case "a", "add":
 			newWalk, err := w.UserInput(db.Walk{})
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("Error:", err)
+				continue
 			}
 
 			err = w.Add(newWalk)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("Error:", err)
+				continue
 			}
+			fmt.Println(color.Green + "\nItem Added!" + color.Reset)
+			util.PressAnyKey()
+			util.ClearScreen()
 
 		case "u", "update":
-			index, foundWalk, err := w.FindWalk(userInputID)
+
+			if id == 0 {
+				fmt.Println("Please provide an ID")
+				continue
+			}
+
+			index, foundWalk, err := w.FindWalk(id)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("Error:", err)
+				continue
 			}
 
 			updatedWalk, err := w.UserInput(foundWalk)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("Error:", err)
+				continue
 			}
 
 			err = w.Update(index, updatedWalk)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("Error:", err)
+				continue
 			}
 
-			fmt.Println("Updated!")
+			fmt.Println(color.Yellow + "\nItem Updated!" + color.Reset)
+			util.PressAnyKey()
+			util.ClearScreen()
 
 		case "d", "delete":
-			index, _, err := w.FindWalk(userInputID)
+
+			if id == 0 {
+				fmt.Println("Please provide an ID")
+				continue
+			}
+			index, _, err := w.FindWalk(id)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("Error:", err)
+				continue
 			}
 
 			err = w.Delete(index)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Println("Error:", err)
+				continue
 			}
 
 			w.ResetIDs()
-			
-			fmt.Println("Walk removed!")
+
+			fmt.Println(color.Red + "\nItem Removed!" + color.Reset)
+			util.PressAnyKey()
+			util.ClearScreen()
+		case "undo":
+			w.Undo()
+			util.ClearScreen()
 
 		case "q", "quit":
 			util.ClearScreen()
-			os.Exit(0)
+			return
 		default:
+			fmt.Println("Unknown command. Try: add, update, delete, quit")
+			util.PressAnyKey()
 			util.ClearScreen()
 		}
 	}

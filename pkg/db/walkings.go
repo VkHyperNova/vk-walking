@@ -34,6 +34,7 @@ func (w *Walkings) PrintCLI() {
 	fmt.Println(color.Cyan + "------------------------" + color.Reset)
 	w.PrintAllWalks()
 	w.PrintStats()
+	fmt.Println(color.Cyan + "\n< Add Update Delete Quit >" + color.Reset)
 
 }
 
@@ -41,13 +42,13 @@ func (w *Walkings) PrintAllWalks() {
 	for _, walk := range w.WALKINGS {
 		id := fmt.Sprint(color.Yellow, walk.ID, color.Reset)
 		name := fmt.Sprint(color.Green + "\"" + walk.NAME + "\"" + color.Reset)
-		distance := fmt.Sprint(strconv.FormatFloat(walk.DISTANCE, 'f', 2, 64) + " miles" )
-		duration := fmt.Sprint("DURATION: "+walk.DURATION)
+		distance := fmt.Sprint(strconv.FormatFloat(walk.DISTANCE, 'f', 2, 64) + " miles")
+		duration := fmt.Sprint("DURATION: " + walk.DURATION)
 		pace := fmt.Sprint("PACE: " + walk.PACE)
 		steps := fmt.Sprint("STEPS: " + strconv.Itoa(walk.STEPS))
 		calories := fmt.Sprint("CALORIES: " + strconv.Itoa(walk.CALORIES))
 		date := fmt.Sprint(walk.DATE)
-		fmt.Println(id, name,color.Cyan +  distance + " | ", duration+ " | ", pace+ " | ", steps+ " | ", calories+ " | ", date+ color.Reset)
+		fmt.Println(id, name, color.Cyan+color.Italic+distance+" | ", duration+" | ", pace+" | ", steps+" | ", calories+" | ", date+color.Reset)
 	}
 }
 
@@ -62,8 +63,8 @@ func (w *Walkings) PrintStats() {
 		totalsteps += walk.STEPS
 		totalcalories += walk.CALORIES
 	}
-	fmt.Printf(color.Yellow + "\nTotal Miles: %.2f (%.2fkm) | %d steps | %d calories\n" + color.Reset, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
-	fmt.Println(color.Cyan + "< Add Update Delete Quit >" + color.Reset)
+	fmt.Printf(color.Blue+color.Bold+color.Italic+"\nTotal Miles: %.2f (%.2fkm) | %d steps | %d calories\n"+color.Reset, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
+
 }
 
 func (w *Walkings) Add(newWalk Walk) error {
@@ -215,4 +216,14 @@ func (w *Walkings) ResetIDs() {
 	}
 
 	w.Save()
+}
+
+func (w *Walkings) Undo() bool {
+
+	// Remove the last item
+	w.WALKINGS = w.WALKINGS[:len(w.WALKINGS)-1]
+
+	w.Save()
+
+	return true
 }

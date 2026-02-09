@@ -9,26 +9,19 @@ import (
 )
 
 func main() {
+	util.CreateDDriveFiles()
 
-	// Create necessary files
-	err := util.CreateNecessaryFiles()
-	if err != nil {
-		log.Fatalf("Fatal error: failed to create necessary files: %v", err)
-	}
+	util.CreateLocalFiles()
 
 	// Initialize Walkings database
-	books := db.Walkings{}
+	w := db.Walkings{}
 
 	// Reload Database
-	err = books.ReadFromFile(config.LocalPath)
+	err := w.ReadFromFile(config.LocalPath)
 	if err != nil {
-		log.Fatalf("Fatal error: failed to load books database: %v", err)
+		log.Fatalf("Fatal error: failed to load walkings database: %v", err)
 	}
 
 	// Start
-	cmd.CommandLine(&books)
+	cmd.CommandLine(&w)
 }
-
-
-
-
