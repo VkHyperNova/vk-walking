@@ -33,7 +33,8 @@ func (w *Walkings) PrintCLI() {
 	fmt.Println(color.Cyan + "VK-WALKING 1.0" + color.Reset)
 	fmt.Println(color.Cyan + "------------------------" + color.Reset)
 	w.PrintAllWalks()
-	w.PrintStats()
+	w.PrintOverallStats()
+	w.PrintStatsByYear()
 	fmt.Println(color.Cyan + "\n< Add Update Delete Quit >" + color.Reset)
 
 }
@@ -52,7 +53,7 @@ func (w *Walkings) PrintAllWalks() {
 	}
 }
 
-func (w *Walkings) PrintStats() {
+func (w *Walkings) PrintOverallStats() {
 
 	totalmiles := 0.0
 	totalsteps := 0
@@ -63,8 +64,33 @@ func (w *Walkings) PrintStats() {
 		totalsteps += walk.STEPS
 		totalcalories += walk.CALORIES
 	}
-	fmt.Printf(color.Blue+color.Bold+color.Italic+"\nTotal Miles: %.2f (%.2fkm) | %d steps | %d calories\n"+color.Reset, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
+	fmt.Printf(color.Blue+color.Bold+color.Italic+"\nOVERALL: Total Miles: %.2f (%.2fkm) | %d steps | %d calories\n"+color.Reset, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
 
+}
+
+func (w *Walkings) PrintStatsByYear() {
+
+	var years []int
+
+	for _, walk := range w.WALKINGS {
+		years = util.AppendIfMissing(years, walk.DATE)
+	}
+
+	for i := 0; i < len(years); i++ {
+		year := years[i]
+		totalmiles := 0.0
+		totalsteps := 0
+		totalcalories := 0
+		for _, walk := range w.WALKINGS {
+			if walk.DATE == years[i] {
+				totalmiles += walk.DISTANCE
+				totalsteps += walk.STEPS
+				totalcalories += walk.CALORIES
+			}
+		}
+
+	fmt.Printf(color.Blue+color.Bold+color.Italic+"\n%d Total Miles: %.2f (%.2fkm) | %d steps | %d calories\n"+color.Reset,year, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
+	}
 }
 
 func (w *Walkings) Add(newWalk Walk) error {

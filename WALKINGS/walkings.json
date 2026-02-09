@@ -2,33 +2,153 @@
   "walkings": [
     {
       "id": 1,
-      "name": "Tendropark",
-      "distance": 4.5,
-      "duration": "1:30:12",
-      "pace": "23:23",
-      "steps": 5000,
-      "calories": 600,
-      "date": "08 veebruar 2026"
+      "name": "Veeriku Kesklinn Tendropark",
+      "distance": 5.69,
+      "duration": "2:37:10",
+      "pace": "27:37",
+      "steps": 14944,
+      "calories": 977,
+      "date": 2025
     },
     {
       "id": 2,
-      "name": "232323sdsdss",
-      "distance": 0,
-      "duration": "",
-      "pace": "",
-      "steps": 0,
-      "calories": 0,
-      "date": ""
+      "name": "Selver to Pirogov",
+      "distance": 1.18,
+      "duration": "54:06",
+      "pace": "45:54",
+      "steps": 4463,
+      "calories": 263,
+      "date": 2025
     },
     {
       "id": 3,
-      "name": "asdsadasd",
-      "distance": 0,
-      "duration": "",
-      "pace": "",
-      "steps": 0,
-      "calories": 0,
-      "date": ""
+      "name": "Saunast koju",
+      "distance": 2.88,
+      "duration": "1:06:09",
+      "pace": "22:56",
+      "steps": 6717,
+      "calories": 447,
+      "date": 2025
+    },
+    {
+      "id": 4,
+      "name": "Tahtvere Park cicrles plus Ravila ring",
+      "distance": 5.68,
+      "duration": "5:08:58",
+      "pace": "54:25",
+      "steps": 24572,
+      "calories": 1400,
+      "date": 2025
+    },
+    {
+      "id": 5,
+      "name": "Tahtvere park circles plus supilinn and tendropark",
+      "distance": 8.46,
+      "duration": "3:33:28",
+      "pace": "25:14",
+      "steps": 20933,
+      "calories": 1400,
+      "date": 2025
+    },
+    {
+      "id": 6,
+      "name": "Car repare walk",
+      "distance": 2.89,
+      "duration": "1:54:25",
+      "pace": "39:32",
+      "steps": 9790,
+      "calories": 599,
+      "date": 2025
+    },
+    {
+      "id": 7,
+      "name": "Saunast koju",
+      "distance": 2.58,
+      "duration": "55:30",
+      "pace": "21:28",
+      "steps": 5779,
+      "calories": 396,
+      "date": 2025
+    },
+    {
+      "id": 8,
+      "name": "Linna and tendropark",
+      "distance": 4.28,
+      "duration": "1:52:21",
+      "pace": "26:15",
+      "steps": 10866,
+      "calories": 709,
+      "date": 2025
+    },
+    {
+      "id": 9,
+      "name": "Long walk to Gardest and Center",
+      "distance": 4.52,
+      "duration": "2:00:36",
+      "pace": "26:41",
+      "steps": 11599,
+      "calories": 758,
+      "date": 2025
+    },
+    {
+      "id": 10,
+      "name": "Saunast koju",
+      "distance": 2.52,
+      "duration": "1:00:48",
+      "pace": "24:06",
+      "steps": 6062,
+      "calories": 395,
+      "date": 2025
+    },
+    {
+      "id": 11,
+      "name": "From Veeriku to Center",
+      "distance": 5.02,
+      "duration": "1:57:42",
+      "pace": "23:27",
+      "steps": 11850,
+      "calories": 780,
+      "date": 2025
+    },
+    {
+      "id": 12,
+      "name": "Ravila check plus Gardest",
+      "distance": 3.78,
+      "duration": "1:15:35",
+      "pace": "20:00",
+      "steps": 8095,
+      "calories": 573,
+      "date": 2025
+    },
+    {
+      "id": 13,
+      "name": "Saunast koju",
+      "distance": 2.92,
+      "duration": "58:45",
+      "pace": "20:07",
+      "steps": 6278,
+      "calories": 443,
+      "date": 2025
+    },
+    {
+      "id": 14,
+      "name": "From center to Gardest",
+      "distance": 5.64,
+      "duration": "4:01:38",
+      "pace": "42:49",
+      "steps": 20266,
+      "calories": 1200,
+      "date": 2025
+    },
+    {
+      "id": 15,
+      "name": "Saunast koju",
+      "distance": 2.34,
+      "duration": "47:18",
+      "pace": "20:12",
+      "steps": 5046,
+      "calories": 356,
+      "date": 2025
     }
   ]
 }

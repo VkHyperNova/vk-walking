@@ -190,3 +190,20 @@ func PressAnyKey() {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 }
+
+
+func Contains(a []int, x int) bool {
+	for _, v := range a {
+		if v == x {
+			return true
+		}
+	}
+	return false
+}
+
+func AppendIfMissing(a []int, x int) []int {
+	if !Contains(a, x) {
+		a = append(a, x)
+	}
+	return a
+}
