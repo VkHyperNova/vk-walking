@@ -60,7 +60,9 @@ func (w *Walkings) PrintTopTen() {
 		name := fmt.Sprintf(" %s%s%s | ", color.Green, walk.NAME, color.Reset)
 		steps := fmt.Sprintf("%s%d%s steps | ", color.Yellow, walk.STEPS, color.Reset )
 		calories := fmt.Sprintf("%s%d%s calories ", color.Yellow, walk.CALORIES, color.Reset)
-		fmt.Println(number + distance + name + steps + calories)
+		pace := fmt.Sprintf(" %s ", walk.PACE)
+		duration := fmt.Sprintf(" %s ", walk.DURATION)
+		fmt.Println(number + distance + name + steps + calories + pace + duration)
 	}
 }
 
