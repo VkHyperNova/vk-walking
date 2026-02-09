@@ -27,7 +27,6 @@ func CreateLocalFiles() error {
 		log.Fatalf("Fatal error: failed to create necessary files: %v", err)
 	}
 
-	config.LocalSave = true
 	return nil
 }
 
