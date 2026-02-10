@@ -8,6 +8,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 	"vk-walking/pkg/color"
 	"vk-walking/pkg/config"
 	"vk-walking/pkg/util"
@@ -55,7 +56,7 @@ func (w *Walkings) PrintTopTen() {
 	// Print top n
 	for i := 0; i < n; i++ {
 		walk := w.WALKINGS[i]
-		number := fmt.Sprintf("%d. (ID: %d) ", i+1, walk.ID)
+		number := fmt.Sprintf("ID: %d ", walk.ID)
 		distance := fmt.Sprintf("%s%s%.2f miles(%.2f km)%s | ", color.Blue, color.Bold, walk.DISTANCE, walk.DISTANCE*1.60934, color.Reset)
 		name := fmt.Sprintf(" %s%s%s | ", color.Green, walk.NAME, color.Reset)
 		steps := fmt.Sprintf("%s%d%s steps | ", color.Yellow, walk.STEPS, color.Reset)
@@ -162,6 +163,9 @@ func (w *Walkings) NewID() int {
 }
 
 func (w *Walkings) Save() error {
+
+	// Order
+	w.ResetIDs()
 
 	// Format JSON
 	walks, err := json.MarshalIndent(w, "", "  ")
@@ -311,8 +315,6 @@ func (w *Walkings) Delete(id int) error {
 			// Delete
 			w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
 
-			w.ResetIDs()
-
 			return w.Save()
 		}
 	}
@@ -327,11 +329,29 @@ func (w *Walkings) ResetIDs() {
 }
 
 func (w *Walkings) Undo() bool {
+	if len(w.WALKINGS) == 0 {
+		fmt.Println("No walks to undo.")
+		return false
+	}
 
-	// Remove the last item
-	w.WALKINGS = w.WALKINGS[:len(w.WALKINGS)-1]
+	lastWalk := w.WALKINGS[len(w.WALKINGS)-1]
+	fmt.Println(lastWalk)
 
-	w.Save()
+	answer := strings.ToLower(util.PromptWithSuggestion("Are you sure you want to delete?", "No"))
 
-	return true
+	if answer == "y" || answer == "yes" {
+		w.WALKINGS = w.WALKINGS[:len(w.WALKINGS)-1]
+
+		if err := w.Save(); err != nil {
+			fmt.Println(color.Red+"Error saving data:"+color.Reset, err)
+			return false
+		}
+
+		fmt.Println(color.Yellow + "Last walk removed." + color.Reset)
+		return true
+	}
+
+	fmt.Println("Undo cancelled.")
+	return false
 }
+

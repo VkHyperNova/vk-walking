@@ -2,13 +2,23 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"vk-walking/pkg/color"
+	"vk-walking/pkg/config"
 	"vk-walking/pkg/db"
 	"vk-walking/pkg/util"
 )
 
-func CommandLine(w *db.Walkings) {
+func CommandLine() {
 	for {
+		// Initialize Walkings database
+		w := db.Walkings{}
+
+		// Reload Database
+		err := w.ReadFromFile(config.LocalPath)
+		if err != nil {
+			log.Fatalf("Fatal error: failed to load walkings database: %v", err)
+		}
 
 		w.PrintCLI()
 
@@ -21,9 +31,10 @@ func CommandLine(w *db.Walkings) {
 
 		switch command {
 		case "a", "add":
-			err := w.Add()
-			if err != nil {
-				fmt.Println("Error:", err)
+			if err := w.Add(); err != nil {
+				fmt.Println(color.Red+"Error:"+color.Reset, err)
+			} else {
+				fmt.Println(color.Yellow + "\nItem Added!" + color.Reset)
 			}
 			util.PressAnyKey()
 			util.ClearScreen()
@@ -35,7 +46,6 @@ func CommandLine(w *db.Walkings) {
 			}
 			util.PressAnyKey()
 			util.ClearScreen()
-
 		case "d", "delete":
 			if err := w.Delete(id); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
