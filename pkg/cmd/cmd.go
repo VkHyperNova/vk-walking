@@ -21,47 +21,18 @@ func CommandLine(w *db.Walkings) {
 
 		switch command {
 		case "a", "add":
-			newWalk, err := w.UserInput(db.Walk{})
+			err := w.Add()
 			if err != nil {
 				fmt.Println("Error:", err)
-				continue
 			}
-
-			err = w.Add(newWalk)
-			if err != nil {
-				fmt.Println("Error:", err)
-				continue
-			}
-			fmt.Println(color.Green + "\nItem Added!" + color.Reset)
 			util.PressAnyKey()
 			util.ClearScreen()
-
 		case "u", "update":
-
-			if id == 0 {
-				fmt.Println("Please provide an ID")
-				continue
+			if err := w.Update(id); err != nil {
+				fmt.Println(color.Red+"Error:"+color.Reset, err)
+			} else {
+				fmt.Println(color.Yellow + "\nItem Updated!" + color.Reset)
 			}
-
-			index, foundWalk, err := w.FindWalk(id)
-			if err != nil {
-				fmt.Println("Error:", err)
-				continue
-			}
-
-			updatedWalk, err := w.UserInput(foundWalk)
-			if err != nil {
-				fmt.Println("Error:", err)
-				continue
-			}
-
-			err = w.Update(index, updatedWalk)
-			if err != nil {
-				fmt.Println("Error:", err)
-				continue
-			}
-
-			fmt.Println(color.Yellow + "\nItem Updated!" + color.Reset)
 			util.PressAnyKey()
 			util.ClearScreen()
 

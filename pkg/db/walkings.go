@@ -56,9 +56,9 @@ func (w *Walkings) PrintTopTen() {
 	for i := 0; i < n; i++ {
 		walk := w.WALKINGS[i]
 		number := fmt.Sprintf("%d. (ID: %d) ", i+1, walk.ID)
-		distance := fmt.Sprintf("%s%s%.2f miles(%.2f km)%s | ",color.Blue, color.Bold, walk.DISTANCE, walk.DISTANCE*1.60934, color.Reset)
+		distance := fmt.Sprintf("%s%s%.2f miles(%.2f km)%s | ", color.Blue, color.Bold, walk.DISTANCE, walk.DISTANCE*1.60934, color.Reset)
 		name := fmt.Sprintf(" %s%s%s | ", color.Green, walk.NAME, color.Reset)
-		steps := fmt.Sprintf("%s%d%s steps | ", color.Yellow, walk.STEPS, color.Reset )
+		steps := fmt.Sprintf("%s%d%s steps | ", color.Yellow, walk.STEPS, color.Reset)
 		calories := fmt.Sprintf("%s%d%s calories ", color.Yellow, walk.CALORIES, color.Reset)
 		pace := fmt.Sprintf(" %s ", walk.PACE)
 		duration := fmt.Sprintf(" %s ", walk.DURATION)
@@ -82,8 +82,6 @@ func (w *Walkings) PrintAllWalks() {
 		)
 	}
 }
-
-
 
 func (w *Walkings) PrintOverallStats() {
 
@@ -125,7 +123,13 @@ func (w *Walkings) PrintStatsByYear() {
 	}
 }
 
-func (w *Walkings) Add(newWalk Walk) error {
+func (w *Walkings) Add() error {
+
+	// Get new walk data
+	newWalk, err := w.UserInput(Walk{})
+	if err != nil {
+		return err
+	}
 
 	// Add unique ID
 	newWalk.ID = w.NewID()
@@ -133,7 +137,15 @@ func (w *Walkings) Add(newWalk Walk) error {
 	// Add
 	w.WALKINGS = append(w.WALKINGS, newWalk)
 
-	return w.Save()
+	// Save
+	err = w.Save()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(color.Green + "\nItem Added!" + color.Reset)
+
+	return nil
 }
 
 func (w *Walkings) NewID() int {
@@ -256,15 +268,33 @@ func (w *Walkings) FindWalk(id int) (int, Walk, error) {
 	return -1, Walk{}, errors.New("walk not found")
 }
 
-func (w *Walkings) Update(index int, updatedWalk Walk) error {
+func (w *Walkings) Update(id int) error {
 
-	// Set correct ID
-	updatedWalk.ID = w.WALKINGS[index].ID
+	// Invalid IDs Guard
+	if id <= 0 {
+		return fmt.Errorf("invalid ID: %d", id)
+	}
 
-	// Update
-	w.WALKINGS[index] = updatedWalk
+	// Find and Update
+	for index, walk := range w.WALKINGS {
 
-	return w.Save()
+		// Find walk
+		if walk.ID == id {
+
+			// Get updated fields
+			updatedWalk, err := w.UserInput(walk)
+			if err != nil {
+				return err
+			}
+
+			// Update
+			w.WALKINGS[index] = updatedWalk
+
+			// Save
+			return w.Save()
+		}
+	}
+	return fmt.Errorf("item with ID %d not found", id)
 }
 
 func (w *Walkings) Delete(index int) error {
