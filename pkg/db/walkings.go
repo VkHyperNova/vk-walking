@@ -297,18 +297,33 @@ func (w *Walkings) Update(id int) error {
 	return fmt.Errorf("item with ID %d not found", id)
 }
 
-func (w *Walkings) Delete(index int) error {
-	w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
-	return w.Save()
+func (w *Walkings) Delete(id int) error {
+
+	// Invalid IDs Guard
+	if id <= 0 {
+		return fmt.Errorf("invalid ID: %d", id)
+	}
+
+	// Find and Delete
+	for index, walk := range w.WALKINGS {
+		if walk.ID == id {
+
+			// Delete
+			w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
+
+			w.ResetIDs()
+
+			return w.Save()
+		}
+	}
+
+	return fmt.Errorf("item with ID %d not found", id)
 }
 
 func (w *Walkings) ResetIDs() {
-
 	for key := range w.WALKINGS {
 		w.WALKINGS[key].ID = key + 1
 	}
-
-	w.Save()
 }
 
 func (w *Walkings) Undo() bool {

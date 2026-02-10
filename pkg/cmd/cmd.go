@@ -37,26 +37,11 @@ func CommandLine(w *db.Walkings) {
 			util.ClearScreen()
 
 		case "d", "delete":
-
-			if id == 0 {
-				fmt.Println("Please provide an ID")
-				continue
+			if err := w.Delete(id); err != nil {
+				fmt.Println(color.Red+"Error:"+color.Reset, err)
+			} else {
+				fmt.Printf(color.Yellow + "\n Item Removed!" + color.Reset)
 			}
-			index, _, err := w.FindWalk(id)
-			if err != nil {
-				fmt.Println("Error:", err)
-				continue
-			}
-
-			err = w.Delete(index)
-			if err != nil {
-				fmt.Println("Error:", err)
-				continue
-			}
-
-			w.ResetIDs()
-
-			fmt.Println(color.Red + "\nItem Removed!" + color.Reset)
 			util.PressAnyKey()
 			util.ClearScreen()
 		case "undo":
