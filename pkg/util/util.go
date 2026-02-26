@@ -3,9 +3,9 @@ package util
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"vk-walking/pkg/color"
@@ -13,64 +13,6 @@ import (
 
 	"github.com/peterh/liner"
 )
-
-func CreateLocalFiles() error {
-	// Create necessary files
-	err := CreateLocalFolder(config.FolderName)
-	if err != nil {
-		log.Fatalf("Fatal error: failed to create necessary files: %v", err)
-	}
-
-	// Create necessary files
-	err = CreateLocalJSON(config.LocalPath)
-	if err != nil {
-		log.Fatalf("Fatal error: failed to create necessary files: %v", err)
-	}
-
-	return nil
-}
-
-func CreateDDriveFiles() {
-	mounted := HardDriveMountCheck()
-	if !mounted {
-		input := Input("Do you want to continue? (y/n)")
-		if strings.ToLower(strings.TrimSpace(input)) != "y" {
-			os.Exit(0)
-		}
-	} else {
-		CreateDDriveFolder()
-	}
-}
-
-func CreateLocalJSON(fileName string) error {
-
-	// Make local json File
-	if _, err := os.Stat(fileName); os.IsNotExist(err) {
-		if err := os.WriteFile(fileName, []byte(`{"walkings": []}`), 0644); err != nil {
-			return fmt.Errorf("error creating file %s: %w", fileName, err)
-		}
-	}
-
-	return nil
-}
-
-func CreateLocalFolder(folderName string) error {
-	// Make local Folder
-	if err := os.MkdirAll(folderName, os.ModePerm); err != nil {
-		return fmt.Errorf("error creating directory %s: %w", folderName, err)
-	}
-
-	return nil
-}
-
-func CreateDDriveFolder() error {
-	// Make backup folder in another drive
-	if err := os.MkdirAll(config.BackupFolder+config.FolderName, os.ModePerm); err != nil {
-		return fmt.Errorf("error creating directory %s: %w", config.BackupFolder, err)
-	}
-	config.DDriveSave = true
-	return nil
-}
 
 func ClearScreen() {
 
@@ -146,16 +88,6 @@ func Input(prompt string) string {
 	return userInput
 }
 
-func PrintArrow() {
-	arrow := color.Yellow + "< Local Only => " + color.Reset
-
-	if config.DDriveSave {
-		arrow = color.Green + "< Local/DDrive => " + color.Reset
-	}
-
-	fmt.Print(arrow)
-}
-
 func ReadCommand() (string, int, bool) {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -191,7 +123,6 @@ func PressAnyKey() {
 	scanner.Scan()
 }
 
-
 func Contains(a []int, x int) bool {
 	for _, v := range a {
 		if v == x {
@@ -208,4 +139,39 @@ func AppendIfMissing(a []int, x int) []int {
 	return a
 }
 
+func ensureFile(path string, content string) error {
+
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return fmt.Errorf("error creating directory for %s: %w", path, err)
+	}
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+			return fmt.Errorf("error creating file %s: %w", path, err)
+		}
+	}
+
+	return nil
+}
+
+func CreateFilesAndFolders() error {
+	
+	if err := ensureFile(config.LocalFile, config.DefaultContent); err != nil {
+		return err
+	}
+
+	if !HardDriveMountCheck() {
+		input := Input("Do you want to continue? (y/n) ")
+		if strings.ToLower(strings.TrimSpace(input)) != "y" {
+			fmt.Println("Exiting program.")
+			os.Exit(0)
+		}
+	} else {
+		if err := ensureFile(config.BackupFile, config.DefaultContent); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
 

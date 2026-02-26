@@ -38,6 +38,7 @@ func (w *Walkings) PrintCLI() {
 	w.PrintOverallStats()
 	w.PrintStatsByYear()
 	fmt.Println(color.Cyan + "\n< Add Update Delete showall undo Quit >" + color.Reset)
+	fmt.Print("=> ")
 
 }
 
@@ -86,6 +87,8 @@ func (w *Walkings) PrintAllWalks() {
 
 func (w *Walkings) PrintOverallStats() {
 
+	walksCount := len(w.WALKINGS)
+
 	totalmiles := 0.0
 	totalsteps := 0
 	totalcalories := 0
@@ -95,6 +98,7 @@ func (w *Walkings) PrintOverallStats() {
 		totalsteps += walk.STEPS
 		totalcalories += walk.CALORIES
 	}
+	fmt.Printf("\nTotal walks count: %d", walksCount)
 	fmt.Printf(color.Blue+color.Bold+color.Italic+"\nOVERALL: Total Miles: %.2f (%.2fkm) | %d steps | %d calories\n"+color.Reset, totalmiles, totalmiles*1.60934, totalsteps, totalcalories)
 
 }
@@ -127,7 +131,7 @@ func (w *Walkings) PrintStatsByYear() {
 func (w *Walkings) Add() error {
 
 	// Get new walk data
-	newWalk, err := w.UserInput(Walk{})
+	newWalk, err := w.GetUserInput(Walk{})
 	if err != nil {
 		return err
 	}
@@ -174,19 +178,13 @@ func (w *Walkings) Save() error {
 	}
 
 	// Save
-	err = os.WriteFile(config.LocalPath, walks, 0644)
+	err = os.WriteFile(config.LocalFile, walks, 0644)
 	if err != nil {
 		return err
 	}
 
 	// Save Backup
-	err = os.WriteFile(config.BackupPath, walks, 0644)
-	if err != nil {
-		return err
-	}
-
-	// Save Backup with Date
-	err = os.WriteFile(config.BackupPathWithDate, walks, 0644)
+	err = os.WriteFile(config.BackupFile, walks, 0644)
 	if err != nil {
 		return err
 	}
@@ -194,7 +192,7 @@ func (w *Walkings) Save() error {
 	return nil
 }
 
-func (w *Walkings) UserInput(oldWalk Walk) (Walk, error) {
+func (w *Walkings) GetUserInput(oldWalk Walk) (Walk, error) {
 
 	// Get Data (strings)
 	name := util.PromptWithSuggestion("Name", oldWalk.NAME)
@@ -286,7 +284,7 @@ func (w *Walkings) Update(id int) error {
 		if walk.ID == id {
 
 			// Get updated fields
-			updatedWalk, err := w.UserInput(walk)
+			updatedWalk, err := w.GetUserInput(walk)
 			if err != nil {
 				return err
 			}

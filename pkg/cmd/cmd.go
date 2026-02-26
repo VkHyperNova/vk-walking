@@ -2,27 +2,14 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"vk-walking/pkg/color"
-	"vk-walking/pkg/config"
 	"vk-walking/pkg/db"
 	"vk-walking/pkg/util"
 )
 
-func CommandLine() {
+func CommandLine(w *db.Walkings) {
 	for {
-		// Initialize Walkings database
-		w := db.Walkings{}
-
-		// Reload Database
-		err := w.ReadFromFile(config.LocalPath)
-		if err != nil {
-			log.Fatalf("Fatal error: failed to load walkings database: %v", err)
-		}
-
 		w.PrintCLI()
-
-		util.PrintArrow()
 
 		command, id, ok := util.ReadCommand()
 		if !ok {
