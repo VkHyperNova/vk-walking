@@ -1,8 +1,16 @@
 {
   "walkings": [
     {
+      "id": 79,
+      "distance": 11,
+      "duration": "1",
+      "pace": "1",
+      "steps": 0,
+      "calories": 0,
+      "date": 0
+    },
+    {
       "id": 1,
-      "name": "Big run",
       "distance": 9.7,
       "duration": "3:22:38",
       "pace": "20:53",
@@ -12,7 +20,6 @@
     },
     {
       "id": 3,
-      "name": "Top 4",
       "distance": 8.46,
       "duration": "3:33:28",
       "pace": "25:14",
@@ -22,7 +29,6 @@
     },
     {
       "id": 4,
-      "name": "Max out",
       "distance": 8.1,
       "duration": "2:30:11",
       "pace": "18:32",
@@ -32,7 +38,6 @@
     },
     {
       "id": 5,
-      "name": "Tendro plus Gardest",
       "distance": 5.88,
       "duration": "2:44:38",
       "pace": "28:00",
@@ -42,7 +47,6 @@
     },
     {
       "id": 6,
-      "name": "Full 4",
       "distance": 5.83,
       "duration": "1:55:15",
       "pace": "19:45",
@@ -52,7 +56,6 @@
     },
     {
       "id": 7,
-      "name": "Veeriku Kesklinn Tendropark",
       "distance": 5.69,
       "duration": "2:37:10",
       "pace": "27:37",
@@ -62,7 +65,6 @@
     },
     {
       "id": 8,
-      "name": "Tahtvere Park cicrles plus Ravila ring",
       "distance": 5.68,
       "duration": "5:08:58",
       "pace": "54:25",
@@ -72,7 +74,6 @@
     },
     {
       "id": 9,
-      "name": "FULL 4",
       "distance": 5.64,
       "duration": "1:52:34",
       "pace": "19:58",
@@ -82,7 +83,6 @@
     },
     {
       "id": 10,
-      "name": "From center to Gardest",
       "distance": 5.64,
       "duration": "4:01:38",
       "pace": "42:49",
@@ -92,7 +92,6 @@
     },
     {
       "id": 11,
-      "name": "Park Supilinn Tendro and Gardest",
       "distance": 5.53,
       "duration": "1:39:56",
       "pace": "18:03",
@@ -102,7 +101,6 @@
     },
     {
       "id": 12,
-      "name": "asd",
       "distance": 5.39,
       "duration": "3:42:05",
       "pace": "41:11",
@@ -112,7 +110,6 @@
     },
     {
       "id": 13,
-      "name": "Supilinn plus Tendro plus Gardest",
       "distance": 5.35,
       "duration": "1:50:56",
       "pace": "20:44",
@@ -122,7 +119,6 @@
     },
     {
       "id": 14,
-      "name": "Esimene joomine kevad",
       "distance": 5.3,
       "duration": "2:04:38",
       "pace": "23:30",
@@ -132,7 +128,6 @@
     },
     {
       "id": 15,
-      "name": "drink",
       "distance": 5.09,
       "duration": "5:03:16",
       "pace": "59:33",
@@ -142,7 +137,6 @@
     },
     {
       "id": 16,
-      "name": "Kevad start walk",
       "distance": 5.06,
       "duration": "1:45:31",
       "pace": "20:50",
@@ -152,7 +146,6 @@
     },
     {
       "id": 17,
-      "name": "From Veeriku to Center",
       "distance": 5.02,
       "duration": "1:57:42",
       "pace": "23:27",
@@ -162,7 +155,6 @@
     },
     {
       "id": 18,
-      "name": "Long walk to Gardest and Center",
       "distance": 4.52,
       "duration": "2:00:36",
       "pace": "26:41",
@@ -172,7 +164,6 @@
     },
     {
       "id": 19,
-      "name": "Top 3",
       "distance": 4.51,
       "duration": "1:28:59",
       "pace": "19:44",
@@ -182,7 +173,6 @@
     },
     {
       "id": 20,
-      "name": "kevad 2",
       "distance": 4.39,
       "duration": "1:32:56",
       "pace": "21:11",
@@ -192,7 +182,6 @@
     },
     {
       "id": 21,
-      "name": "Top 3",
       "distance": 4.34,
       "duration": "1:29:32",
       "pace": "20:38",
@@ -202,7 +191,6 @@
     },
     {
       "id": 22,
-      "name": "Fasting walk",
       "distance": 4.34,
       "duration": "1:23:32",
       "pace": "19:16",
@@ -212,7 +200,6 @@
     },
     {
       "id": 23,
-      "name": "-1C walk",
       "distance": 4.32,
       "duration": "1:23:15",
       "pace": "19:17",
@@ -222,7 +209,6 @@
     },
     {
       "id": 24,
-      "name": "Kevad test",
       "distance": 4.32,
       "duration": "1:24:32",
       "pace": "19:35",
@@ -232,7 +218,6 @@
     },
     {
       "id": 25,
-      "name": "New Jope Test",
       "distance": 4.3,
       "duration": "1:29:14",
       "pace": "20:45",
@@ -242,7 +227,6 @@
     },
     {
       "id": 26,
-      "name": "Linna and tendropark",
       "distance": 4.28,
       "duration": "1:52:21",
       "pace": "26:15",
@@ -252,7 +236,6 @@
     },
     {
       "id": 27,
-      "name": "latest",
       "distance": 4.28,
       "duration": "1:18:30",
       "pace": "18:20",
@@ -262,7 +245,6 @@
     },
     {
       "id": 28,
-      "name": "Top 3",
       "distance": 4.24,
       "duration": "1:21:42",
       "pace": "19:17",
@@ -272,7 +254,6 @@
     },
     {
       "id": 29,
-      "name": "latest",
       "distance": 4.24,
       "duration": "1:43:15",
       "pace": "24:22",
@@ -282,7 +263,6 @@
     },
     {
       "id": 30,
-      "name": "Top 3",
       "distance": 4.23,
       "duration": "1:23:51",
       "pace": "19:48",
@@ -292,7 +272,6 @@
     },
     {
       "id": 31,
-      "name": "Top 3",
       "distance": 4.23,
       "duration": "1:21:03",
       "pace": "19:09",
@@ -302,7 +281,6 @@
     },
     {
       "id": 32,
-      "name": "Full 3",
       "distance": 3.91,
       "duration": "1:19:50",
       "pace": "20:25",
@@ -312,7 +290,6 @@
     },
     {
       "id": 33,
-      "name": "Full two",
       "distance": 3.88,
       "duration": "1:15:22",
       "pace": "19:24",
@@ -322,7 +299,6 @@
     },
     {
       "id": 34,
-      "name": "Supilinn plus tendro",
       "distance": 3.78,
       "duration": "1:14:37",
       "pace": "19:44",
@@ -332,7 +308,6 @@
     },
     {
       "id": 35,
-      "name": "Ravila check plus Gardest",
       "distance": 3.78,
       "duration": "1:15:35",
       "pace": "20:00",
@@ -342,7 +317,6 @@
     },
     {
       "id": 36,
-      "name": "Supilinn Tendro",
       "distance": 3.75,
       "duration": "1:21:20",
       "pace": "21:41",
@@ -352,7 +326,6 @@
     },
     {
       "id": 37,
-      "name": "Park and Gardest",
       "distance": 3.71,
       "duration": "1:16:08",
       "pace": "20:30",
@@ -362,7 +335,6 @@
     },
     {
       "id": 38,
-      "name": "Tahtvere park plus Gardest",
       "distance": 3.71,
       "duration": "1:16:08",
       "pace": "20:30",
@@ -372,7 +344,6 @@
     },
     {
       "id": 39,
-      "name": "Tendro Gardest",
       "distance": 3.32,
       "duration": "1:06:31",
       "pace": "20:00",
@@ -382,7 +353,6 @@
     },
     {
       "id": 40,
-      "name": "Tendro Gardest",
       "distance": 3.23,
       "duration": "1:01:58",
       "pace": "19:11",
@@ -392,7 +362,6 @@
     },
     {
       "id": 41,
-      "name": "Top two speedrun",
       "distance": 3.22,
       "duration": "1:04:18",
       "pace": "19:59",
@@ -402,7 +371,6 @@
     },
     {
       "id": 42,
-      "name": "Tendro plus Gardest",
       "distance": 3.18,
       "duration": "1:01:06",
       "pace": "19:14",
@@ -412,7 +380,6 @@
     },
     {
       "id": 43,
-      "name": "Tendro Gardest",
       "distance": 3.17,
       "duration": "1:01:43",
       "pace": "19:29",
@@ -422,7 +389,6 @@
     },
     {
       "id": 44,
-      "name": "Tendro Gardest",
       "distance": 3.17,
       "duration": "1:03:46",
       "pace": "20:06",
@@ -432,7 +398,6 @@
     },
     {
       "id": 45,
-      "name": "Tendro plus Gardest",
       "distance": 3.14,
       "duration": "59:42",
       "pace": "19:01",
@@ -442,7 +407,6 @@
     },
     {
       "id": 46,
-      "name": "Tendro plus Gardest",
       "distance": 3.1,
       "duration": "1:04:47",
       "pace": "20:53",
@@ -452,7 +416,6 @@
     },
     {
       "id": 47,
-      "name": "Saunast koju",
       "distance": 3.02,
       "duration": "1:03:23",
       "pace": "21:01",
@@ -462,7 +425,6 @@
     },
     {
       "id": 48,
-      "name": "Tendro plus Gardest",
       "distance": 2.92,
       "duration": "1:12:17",
       "pace": "24:46",
@@ -472,7 +434,6 @@
     },
     {
       "id": 49,
-      "name": "Tendro plus Gardest",
       "distance": 2.92,
       "duration": "1:12:17",
       "pace": "24:46",
@@ -482,7 +443,6 @@
     },
     {
       "id": 50,
-      "name": "Saunast koju",
       "distance": 2.92,
       "duration": "58:45",
       "pace": "20:07",
@@ -492,7 +452,6 @@
     },
     {
       "id": 51,
-      "name": "Car repare walk",
       "distance": 2.89,
       "duration": "1:54:25",
       "pace": "39:32",
@@ -502,7 +461,6 @@
     },
     {
       "id": 52,
-      "name": "Gardest",
       "distance": 2.88,
       "duration": "1:01:23",
       "pace": "21:18",
@@ -512,7 +470,6 @@
     },
     {
       "id": 53,
-      "name": "Ravila plus Gardest",
       "distance": 2.88,
       "duration": "1:01:23",
       "pace": "21:18",
@@ -522,7 +479,6 @@
     },
     {
       "id": 54,
-      "name": "Saunast koju",
       "distance": 2.88,
       "duration": "1:06:09",
       "pace": "22:56",
@@ -532,7 +488,6 @@
     },
     {
       "id": 55,
-      "name": "Gardest",
       "distance": 2.87,
       "duration": "1:06:39",
       "pace": "23:11",
@@ -542,7 +497,6 @@
     },
     {
       "id": 56,
-      "name": "Tendro and Gardest",
       "distance": 2.84,
       "duration": "1:00:33",
       "pace": "21:18",
@@ -552,7 +506,6 @@
     },
     {
       "id": 78,
-      "name": "latest",
       "distance": 2.84,
       "duration": "56:56",
       "pace": "20:03",
@@ -562,7 +515,6 @@
     },
     {
       "id": 57,
-      "name": "Tendro plus Gardest",
       "distance": 2.82,
       "duration": "54:45",
       "pace": "19:24",
@@ -572,7 +524,6 @@
     },
     {
       "id": 58,
-      "name": "Saunast koju",
       "distance": 2.58,
       "duration": "55:30",
       "pace": "21:28",
@@ -582,7 +533,6 @@
     },
     {
       "id": 59,
-      "name": "Gardest",
       "distance": 2.54,
       "duration": "51:28",
       "pace": "20:15",
@@ -592,7 +542,6 @@
     },
     {
       "id": 60,
-      "name": "Gardest",
       "distance": 2.54,
       "duration": "51:28",
       "pace": "20:15",
@@ -602,7 +551,6 @@
     },
     {
       "id": 61,
-      "name": "Saunast koju",
       "distance": 2.52,
       "duration": "1:00:48",
       "pace": "24:06",
@@ -612,7 +560,6 @@
     },
     {
       "id": 62,
-      "name": "Gardest",
       "distance": 2.48,
       "duration": "48:44",
       "pace": "19:39",
@@ -622,7 +569,6 @@
     },
     {
       "id": 63,
-      "name": "Gardest",
       "distance": 2.48,
       "duration": "48:44",
       "pace": "19:39",
@@ -632,7 +578,6 @@
     },
     {
       "id": 64,
-      "name": "Gardest",
       "distance": 2.43,
       "duration": "47:06",
       "pace": "19:21",
@@ -642,7 +587,6 @@
     },
     {
       "id": 65,
-      "name": "Gardest",
       "distance": 2.42,
       "duration": "49:18",
       "pace": "20:21",
@@ -652,7 +596,6 @@
     },
     {
       "id": 66,
-      "name": "Gardest",
       "distance": 2.42,
       "duration": "49:18",
       "pace": "20:21",
@@ -662,7 +605,6 @@
     },
     {
       "id": 67,
-      "name": "Gardest",
       "distance": 2.41,
       "duration": "45:44",
       "pace": "18:59",
@@ -672,7 +614,6 @@
     },
     {
       "id": 68,
-      "name": "Ravila check",
       "distance": 2.35,
       "duration": "2:21:43",
       "pace": "-",
@@ -682,7 +623,6 @@
     },
     {
       "id": 69,
-      "name": "Saunast koju",
       "distance": 2.34,
       "duration": "47:18",
       "pace": "20:12",
@@ -692,7 +632,6 @@
     },
     {
       "id": 70,
-      "name": "Tendro kvadrat",
       "distance": 2.23,
       "duration": "44:42",
       "pace": "20:05",
@@ -702,7 +641,6 @@
     },
     {
       "id": 71,
-      "name": "Gardest",
       "distance": 2.14,
       "duration": "41:19",
       "pace": "10:20",
@@ -712,7 +650,6 @@
     },
     {
       "id": 72,
-      "name": "Gardest",
       "distance": 2.14,
       "duration": "41:19",
       "pace": "19:20",
@@ -722,7 +659,6 @@
     },
     {
       "id": 73,
-      "name": "Big Kvadrat",
       "distance": 2.08,
       "duration": "44:33",
       "pace": "21:27",
@@ -732,7 +668,6 @@
     },
     {
       "id": 74,
-      "name": "Tendro and Gardest",
       "distance": 2.01,
       "duration": "37:05",
       "pace": "18:28",
@@ -742,7 +677,6 @@
     },
     {
       "id": 75,
-      "name": "Small kvadrat tendro",
       "distance": 1.71,
       "duration": "34:18",
       "pace": "20:00",
@@ -752,17 +686,6 @@
     },
     {
       "id": 76,
-      "name": "Garage",
-      "distance": 1.34,
-      "duration": "31:21",
-      "pace": "23:29",
-      "steps": 3156,
-      "calories": 208,
-      "date": 2025
-    },
-    {
-      "id": 77,
-      "name": "Garage check",
       "distance": 1.34,
       "duration": "31:21",
       "pace": "23:29",

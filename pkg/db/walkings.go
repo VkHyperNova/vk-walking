@@ -2,7 +2,6 @@ package db
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -16,7 +15,6 @@ import (
 
 type Walk struct {
 	ID       int     `json:"id"`
-	NAME     string  `json:"name"`
 	DISTANCE float64 `json:"distance"`
 	DURATION string  `json:"duration"`
 	PACE     string  `json:"pace"`
@@ -29,25 +27,85 @@ type Walkings struct {
 	WALKINGS []Walk `json:"walkings"`
 }
 
+/* Main Functions */
+
 func (w *Walkings) PrintCLI() {
 
 	// Program information
 	fmt.Println(color.Cyan + "VK-WALKING 1.0" + color.Reset)
 	fmt.Println(color.Cyan + "------------------------" + color.Reset)
-	w.PrintTopTen()
+	w.PrintTopDistance()
 	w.PrintOverallStats()
 	w.PrintStatsByYear()
 }
 
-func (w *Walkings) PrintTopTen() {
+func (w *Walkings) Add() error {
+
+	newWalk, err := w.GetUserInput(Walk{})
+	if err != nil {
+		return err
+	}
+
+	newWalk.ID = w.NewID()
+
+	w.WALKINGS = append(w.WALKINGS, newWalk)
+
+	return w.Save()
+}
+
+func (w *Walkings) Update(id int) error {
+
+	if id <= 0 {
+		return fmt.Errorf("invalid ID: %d", id)
+	}
+
+	index, err := w.findIndex(id)
+	if err != nil {
+		return err
+	}
+
+	updated, err := w.GetUserInput((w.WALKINGS)[index])
+	if err != nil {
+		return err
+	}
+
+	(w.WALKINGS)[index] = updated
+
+	return w.Save()
+}
+
+func (w *Walkings) Delete(id int) error {
+
+	if id <= 0 {
+		return fmt.Errorf("invalid ID: %d", id)
+	}
+
+	index, err := w.findIndex(id)
+	if err != nil {
+		return err
+	}
+
+	confirm := util.Confirm()
+	if !confirm {
+		return fmt.Errorf("Abort")
+	}
+
+	w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
+
+	return w.Save()
+}
+
+/* Print Functions */
+
+func (w *Walkings) PrintTopDistance() {
 	// Sort descending by distance
 	sort.Slice(w.WALKINGS, func(i, j int) bool {
 		return w.WALKINGS[i].DISTANCE > w.WALKINGS[j].DISTANCE
 	})
 
-	// Determine how many to print (up to 10)
-	n := 10
-	if len(w.WALKINGS) < 10 {
+	// Determine how many to print (up to 5)
+	n := 5
+	if len(w.WALKINGS) < n {
 		n = len(w.WALKINGS)
 	}
 
@@ -56,19 +114,18 @@ func (w *Walkings) PrintTopTen() {
 		walk := w.WALKINGS[i]
 		number := fmt.Sprintf("ID: %d ", walk.ID)
 		distance := fmt.Sprintf("%s%s%.2f miles(%.2f km)%s | ", color.Blue, color.Bold, walk.DISTANCE, walk.DISTANCE*1.60934, color.Reset)
-		name := fmt.Sprintf(" %s%s%s | ", color.Green, walk.NAME, color.Reset)
 		steps := fmt.Sprintf("%s%d%s steps | ", color.Yellow, walk.STEPS, color.Reset)
 		calories := fmt.Sprintf("%s%d%s calories ", color.Yellow, walk.CALORIES, color.Reset)
 		pace := fmt.Sprintf(" %s ", walk.PACE)
 		duration := fmt.Sprintf(" %s ", walk.DURATION)
-		fmt.Println(number + distance + steps + calories + pace + duration + name)
+		fmt.Println(number + distance + steps + calories + pace + duration)
 	}
 }
 
 func (w *Walkings) PrintAllWalks() {
 	for i, walk := range w.WALKINGS {
 		fmt.Printf(
-			"%d. ID:%d  Distance:%.2f  Duration:%s  Pace:%s  Steps:%d  Calories:%d  Date:%d  Name:%s\n",
+			"%d. ID:%d  Distance:%.2f  Duration:%s  Pace:%s  Steps:%d  Calories:%d  Date:%d\n",
 			i+1,
 			walk.ID,
 			walk.DISTANCE,
@@ -77,7 +134,6 @@ func (w *Walkings) PrintAllWalks() {
 			walk.STEPS,
 			walk.CALORIES,
 			walk.DATE,
-			walk.NAME,
 		)
 	}
 }
@@ -125,19 +181,7 @@ func (w *Walkings) PrintStatsByYear() {
 	}
 }
 
-func (w *Walkings) Add() error {
-
-	newWalk, err := w.GetUserInput(Walk{})
-	if err != nil {
-		return err
-	}
-
-	newWalk.ID = w.NewID()
-
-	w.WALKINGS = append(w.WALKINGS, newWalk)
-
-	return w.Save()
-}
+/* Dir Functions */
 
 func (w *Walkings) NewID() int {
 
@@ -178,7 +222,6 @@ func (w *Walkings) Save() error {
 func (w *Walkings) GetUserInput(oldWalk Walk) (Walk, error) {
 
 	// Get Data (strings)
-	name := util.PromptWithSuggestion("Name", oldWalk.NAME)
 	distanceStr := util.PromptWithSuggestion("Distance", strconv.FormatFloat(oldWalk.DISTANCE, 'f', 2, 64))
 	duration := util.PromptWithSuggestion("Duration", oldWalk.DURATION)
 	pace := util.PromptWithSuggestion("Pace", oldWalk.PACE)
@@ -210,7 +253,6 @@ func (w *Walkings) GetUserInput(oldWalk Walk) (Walk, error) {
 
 	return Walk{
 		ID:       oldWalk.ID,
-		NAME:     name,
 		DISTANCE: distance,
 		DURATION: duration,
 		PACE:     pace,
@@ -241,58 +283,6 @@ func (w *Walkings) ReadFromFile(path string) error {
 	}
 
 	return nil
-}
-
-func (w *Walkings) FindWalk(id int) (int, Walk, error) {
-	for index, foundWalk := range w.WALKINGS {
-		if foundWalk.ID == id {
-			return index, foundWalk, nil
-		}
-	}
-
-	return -1, Walk{}, errors.New("walk not found")
-}
-
-func (w *Walkings) Update(id int) error {
-
-	if id <= 0 {
-		return fmt.Errorf("invalid ID: %d", id)
-	}
-
-	index, err := w.findIndex(id)
-	if err != nil {
-		return err
-	}
-
-	updated, err := w.GetUserInput((w.WALKINGS)[index])
-	if err != nil {
-		return err
-	}
-
-	(w.WALKINGS)[index] = updated
-
-	return w.Save()
-}
-
-func (w *Walkings) Delete(id int) error {
-
-	if id <= 0 {
-		return fmt.Errorf("invalid ID: %d", id)
-	}
-
-	index, err := w.findIndex(id)
-	if err != nil {
-		return err
-	}
-
-	confirm := util.Confirm()
-	if !confirm {
-		return fmt.Errorf("Abort")
-	}
-
-	w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
-
-	return w.Save()
 }
 
 func (w *Walkings) findIndex(id int) (int, error) {
