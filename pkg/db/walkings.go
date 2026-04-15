@@ -37,9 +37,6 @@ func (w *Walkings) PrintCLI() {
 	w.PrintTopTen()
 	w.PrintOverallStats()
 	w.PrintStatsByYear()
-	fmt.Println(color.Cyan + "\n< Add Update Delete showall undo Quit >" + color.Reset)
-	fmt.Print("=> ")
-
 }
 
 func (w *Walkings) PrintTopTen() {
@@ -130,27 +127,16 @@ func (w *Walkings) PrintStatsByYear() {
 
 func (w *Walkings) Add() error {
 
-	// Get new walk data
 	newWalk, err := w.GetUserInput(Walk{})
 	if err != nil {
 		return err
 	}
 
-	// Add unique ID
 	newWalk.ID = w.NewID()
 
-	// Add
 	w.WALKINGS = append(w.WALKINGS, newWalk)
 
-	// Save
-	err = w.Save()
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(color.Green + "\nItem Added!" + color.Reset)
-
-	return nil
+	return w.Save()
 }
 
 func (w *Walkings) NewID() int {
@@ -167,9 +153,6 @@ func (w *Walkings) NewID() int {
 }
 
 func (w *Walkings) Save() error {
-
-	// Order
-	w.ResetIDs()
 
 	// Format JSON
 	walks, err := json.MarshalIndent(w, "", "  ")
@@ -272,58 +255,54 @@ func (w *Walkings) FindWalk(id int) (int, Walk, error) {
 
 func (w *Walkings) Update(id int) error {
 
-	// Invalid IDs Guard
 	if id <= 0 {
 		return fmt.Errorf("invalid ID: %d", id)
 	}
 
-	// Find and Update
-	for index, walk := range w.WALKINGS {
-
-		// Find walk
-		if walk.ID == id {
-
-			// Get updated fields
-			updatedWalk, err := w.GetUserInput(walk)
-			if err != nil {
-				return err
-			}
-
-			// Update
-			w.WALKINGS[index] = updatedWalk
-
-			// Save
-			return w.Save()
-		}
+	index, err := w.findIndex(id)
+	if err != nil {
+		return err
 	}
-	return fmt.Errorf("item with ID %d not found", id)
+
+	updated, err := w.GetUserInput((w.WALKINGS)[index])
+	if err != nil {
+		return err
+	}
+
+	(w.WALKINGS)[index] = updated
+
+	return w.Save()
 }
 
 func (w *Walkings) Delete(id int) error {
 
-	// Invalid IDs Guard
 	if id <= 0 {
 		return fmt.Errorf("invalid ID: %d", id)
 	}
 
-	// Find and Delete
-	for index, walk := range w.WALKINGS {
-		if walk.ID == id {
-
-			// Delete
-			w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
-
-			return w.Save()
-		}
+	index, err := w.findIndex(id)
+	if err != nil {
+		return err
 	}
 
-	return fmt.Errorf("item with ID %d not found", id)
+	confirm := util.Confirm()
+	if !confirm {
+		return fmt.Errorf("Abort")
+	}
+
+	w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
+
+	return w.Save()
 }
 
-func (w *Walkings) ResetIDs() {
-	for key := range w.WALKINGS {
-		w.WALKINGS[key].ID = key + 1
+func (w *Walkings) findIndex(id int) (int, error) {
+	for i, walk := range w.WALKINGS{
+		if walk.ID == id {
+			fmt.Println(walk)
+			return i, nil
+		}
 	}
+	return -1, fmt.Errorf("item with ID %d not found", id)
 }
 
 func (w *Walkings) Undo() bool {

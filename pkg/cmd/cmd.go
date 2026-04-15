@@ -2,23 +2,28 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 	"vk-walking/pkg/color"
 	"vk-walking/pkg/db"
 	"vk-walking/pkg/util"
 )
 
-func CommandLine(w *db.Walkings) {
+func CommandLine(walkings *db.Walkings) {
 	for {
-		w.PrintCLI()
+		walkings.PrintCLI()
 
-		command, id, ok := util.ReadCommand()
-		if !ok {
-			continue
-		}
+		var cmd string
+		var id int
 
-		switch command {
+		fmt.Print("=> ")
+
+		fmt.Scanln(&cmd, &id)
+
+		cmd = strings.ToLower(cmd)
+
+		switch cmd {
 		case "a", "add":
-			if err := w.Add(); err != nil {
+			if err := walkings.Add(); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
 				fmt.Println(color.Yellow + "\nItem Added!" + color.Reset)
@@ -26,7 +31,7 @@ func CommandLine(w *db.Walkings) {
 			util.PressAnyKey()
 			util.ClearScreen()
 		case "u", "update":
-			if err := w.Update(id); err != nil {
+			if err := walkings.Update(id); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
 				fmt.Println(color.Yellow + "\nItem Updated!" + color.Reset)
@@ -34,7 +39,7 @@ func CommandLine(w *db.Walkings) {
 			util.PressAnyKey()
 			util.ClearScreen()
 		case "d", "delete":
-			if err := w.Delete(id); err != nil {
+			if err := walkings.Delete(id); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
 				fmt.Printf(color.Yellow + "\n Item Removed!" + color.Reset)
@@ -42,11 +47,11 @@ func CommandLine(w *db.Walkings) {
 			util.PressAnyKey()
 			util.ClearScreen()
 		case "undo":
-			w.Undo()
+			walkings.Undo()
 			util.ClearScreen()
 		case "showall":
 			util.ClearScreen()
-			w.PrintAllWalks()
+			walkings.PrintAllWalks()
 			util.PressAnyKey()
 
 		case "q", "quit":

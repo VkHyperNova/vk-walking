@@ -88,35 +88,6 @@ func Input(prompt string) string {
 	return userInput
 }
 
-func ReadCommand() (string, int, bool) {
-	reader := bufio.NewReader(os.Stdin)
-
-	line, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Input error:", err)
-		return "", 0, false
-	}
-
-	line = strings.TrimSpace(line)
-	parts := strings.Fields(line)
-
-	if len(parts) == 0 {
-		return "", 0, false
-	}
-
-	command := strings.ToLower(parts[0])
-	id := 0
-
-	if len(parts) > 1 {
-		if _, err := fmt.Sscan(parts[1], &id); err != nil {
-			fmt.Println("Invalid ID")
-			return "", 0, false
-		}
-	}
-
-	return command, id, true
-}
-
 func PressAnyKey() {
 	fmt.Print()
 	scanner := bufio.NewScanner(os.Stdin)
@@ -175,3 +146,24 @@ func CreateFilesAndFolders() error {
 	return nil
 }
 
+func Confirm() bool {
+
+	input := Prompt("(y/n): ")
+
+	if input == "n" || input == "no" || input == "q" {
+		fmt.Println(color.Red, "Aborted!", color.Reset)
+		return false
+	}
+	return true
+}
+
+func Prompt(Question string) string {
+
+	fmt.Print(color.Cyan, Question, color.Reset)
+
+	var input string
+
+	fmt.Scanln(&input)
+
+	return input
+}
