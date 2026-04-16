@@ -8,7 +8,7 @@ import (
 	"vk-walking/pkg/util"
 )
 
-func CommandLine(walkings *db.Walkings) {
+func CommandLine(walkings *db.WalkData) {
 	for {
 		walkings.PrintCLI()
 
@@ -58,7 +58,7 @@ func CommandLine(walkings *db.Walkings) {
 			util.ClearScreen()
 			return
 		default:
-			fmt.Println("Unknown command. Try: add, update, delete, quit")
+			fmt.Println("Unknown command. Try: add, update, delete, undo, showall, quit")
 			util.PressAnyKey()
 			util.ClearScreen()
 		}

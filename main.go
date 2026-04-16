@@ -18,7 +18,7 @@ func main() {
 	}
 
 	// Initialize Walkings database
-	w := db.Walkings{}
+	w := db.WalkData{}
 
 	// Reload Database
 	err := w.ReadFromFile(config.LocalFile)
@@ -29,3 +29,7 @@ func main() {
 	// Start
 	cmd.CommandLine(&w)
 }
+
+
+
+
