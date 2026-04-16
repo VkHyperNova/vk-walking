@@ -14,16 +14,16 @@ import (
 )
 
 type Walk struct {
-	ID       int    `json:"id"` // keep as int
-	DISTANCE string `json:"distance"`
-	DURATION string `json:"duration"`
-	STEPS    string `json:"steps"`
-	CALORIES string `json:"calories"`
-	DATE     string `json:"date"`
+	Id       int    `json:"id"` // keep as int
+	Distance string `json:"distance"`
+	Duration string `json:"duration"`
+	Steps    string `json:"steps"`
+	Calories string `json:"calories"`
+	Date     string `json:"date"`
 }
 
 type WalkData struct {
-	WALKINGS []Walk `json:"walkings"`
+	Data []Walk `json:"data"`
 }
 
 /* Main Functions */
@@ -48,9 +48,9 @@ func (w *WalkData) Add() error {
 		return err
 	}
 
-	newWalk.ID = w.NewID()
+	newWalk.Id = w.NewID()
 
-	w.WALKINGS = append(w.WALKINGS, newWalk)
+	w.Data = append(w.Data, newWalk)
 
 	return w.Save()
 }
@@ -66,12 +66,12 @@ func (w *WalkData) Update(id int) error {
 		return err
 	}
 
-	updated, err := w.GetUserInput((w.WALKINGS)[index])
+	updated, err := w.GetUserInput((w.Data)[index])
 	if err != nil {
 		return err
 	}
 
-	(w.WALKINGS)[index] = updated
+	(w.Data)[index] = updated
 
 	return w.Save()
 }
@@ -92,7 +92,7 @@ func (w *WalkData) Delete(id int) error {
 		return fmt.Errorf("Abort")
 	}
 
-	w.WALKINGS = append((w.WALKINGS)[:index], (w.WALKINGS)[index+1:]...)
+	w.Data = append((w.Data)[:index], (w.Data)[index+1:]...)
 
 	return w.Save()
 }
@@ -101,11 +101,11 @@ func (w *WalkData) Delete(id int) error {
 
 func (w *WalkData) PrintTopDistance() {
 	// Copy the slice
-	sorted := make([]Walk, len(w.WALKINGS))
-	copy(sorted, w.WALKINGS)
+	sorted := make([]Walk, len(w.Data))
+	copy(sorted, w.Data)
 	// Sort copy descending by distance
 	sort.Slice(sorted, func(i, j int) bool {
-		return sorted[i].DISTANCE > sorted[j].DISTANCE
+		return sorted[i].Distance > sorted[j].Distance
 	})
 	// Determine how many to print (up to 5)
 	n := 5
@@ -116,23 +116,23 @@ func (w *WalkData) PrintTopDistance() {
 	fmt.Print(color.Blue + color.Bold + "\nTop Distance \n" + color.Reset)
 	for i := 0; i < n; i++ {
 		walk := sorted[i]
-		number := fmt.Sprintf("ID: %d ", walk.ID)
+		number := fmt.Sprintf("ID: %d ", walk.Id)
 		floatDistance, _ := strconv.ParseFloat("3.14", 64)
-		distance := fmt.Sprintf("%s%s%s miles(%.2f km)%s | ", color.Yellow, color.Bold, walk.DISTANCE, floatDistance*1.60934, color.Reset)
-		steps := fmt.Sprintf("%s steps | ", walk.STEPS)
-		calories := fmt.Sprintf("%s calories ", walk.CALORIES)
-		duration := fmt.Sprintf(" %s ", walk.DURATION)
+		distance := fmt.Sprintf("%s%s%s miles(%.2f km)%s | ", color.Yellow, color.Bold, walk.Distance, floatDistance*1.60934, color.Reset)
+		steps := fmt.Sprintf("%s steps | ", walk.Steps)
+		calories := fmt.Sprintf("%s calories ", walk.Calories)
+		duration := fmt.Sprintf(" %s ", walk.Duration)
 		fmt.Println(number + distance + steps + calories + duration)
 	}
 }
 
 func (w *WalkData) PrintTopSteps() {
 	// Copy the slice
-	sorted := make([]Walk, len(w.WALKINGS))
-	copy(sorted, w.WALKINGS)
+	sorted := make([]Walk, len(w.Data))
+	copy(sorted, w.Data)
 	// Sort copy descending by distance
 	sort.Slice(sorted, func(i, j int) bool {
-		return sorted[i].STEPS > sorted[j].STEPS
+		return sorted[i].Steps > sorted[j].Steps
 	})
 	// Determine how many to print (up to 5)
 	n := 5
@@ -143,23 +143,23 @@ func (w *WalkData) PrintTopSteps() {
 	fmt.Print(color.Blue + color.Bold + "\nTop Steps \n" + color.Reset)
 	for i := 0; i < n; i++ {
 		walk := sorted[i]
-		number := fmt.Sprintf("ID: %d ", walk.ID)
+		number := fmt.Sprintf("ID: %d ", walk.Id)
 		floatDistance, _ := strconv.ParseFloat("3.14", 64)
-		distance := fmt.Sprintf("%s miles(%.2f km) | ", walk.DISTANCE, floatDistance*1.60934)
-		steps := fmt.Sprintf("%s%s%s%s steps | ", color.Yellow, color.Bold, walk.STEPS, color.Reset)
-		calories := fmt.Sprintf("%s calories ", walk.CALORIES)
-		duration := fmt.Sprintf(" %s ", walk.DURATION)
+		distance := fmt.Sprintf("%s miles(%.2f km) | ", walk.Distance, floatDistance*1.60934)
+		steps := fmt.Sprintf("%s%s%s%s steps | ", color.Yellow, color.Bold, walk.Steps, color.Reset)
+		calories := fmt.Sprintf("%s calories ", walk.Calories)
+		duration := fmt.Sprintf(" %s ", walk.Duration)
 		fmt.Println(number + distance + steps + calories + duration)
 	}
 }
 
 func (w *WalkData) PrintTopCalories() {
 	// Copy the slice
-	sorted := make([]Walk, len(w.WALKINGS))
-	copy(sorted, w.WALKINGS)
+	sorted := make([]Walk, len(w.Data))
+	copy(sorted, w.Data)
 	// Sort copy descending by distance
 	sort.Slice(sorted, func(i, j int) bool {
-		return sorted[i].CALORIES > sorted[j].CALORIES
+		return sorted[i].Calories > sorted[j].Calories
 	})
 	// Determine how many to print (up to 5)
 	n := 5
@@ -170,23 +170,23 @@ func (w *WalkData) PrintTopCalories() {
 	fmt.Print(color.Blue + color.Bold + "\nTop Calories \n" + color.Reset)
 	for i := 0; i < n; i++ {
 		walk := sorted[i]
-		number := fmt.Sprintf("ID: %d ", walk.ID)
+		number := fmt.Sprintf("ID: %d ", walk.Id)
 		floatDistance, _ := strconv.ParseFloat("3.14", 64)
-		distance := fmt.Sprintf("%s miles(%.2f km) | ", walk.DISTANCE, floatDistance*1.60934)
-		steps := fmt.Sprintf("%s steps | ", walk.STEPS)
-		calories := fmt.Sprintf("%s%s%s%s calories ", color.Yellow, color.Bold, walk.CALORIES, color.Reset)
-		duration := fmt.Sprintf(" %s ", walk.DURATION)
+		distance := fmt.Sprintf("%s miles(%.2f km) | ", walk.Distance, floatDistance*1.60934)
+		steps := fmt.Sprintf("%s steps | ", walk.Steps)
+		calories := fmt.Sprintf("%s%s%s%s calories ", color.Yellow, color.Bold, walk.Calories, color.Reset)
+		duration := fmt.Sprintf(" %s ", walk.Duration)
 		fmt.Println(number + distance + steps + calories + duration)
 	}
 }
 
 func (w *WalkData) PrintTopDuration() {
 	// Copy the slice
-	sorted := make([]Walk, len(w.WALKINGS))
-	copy(sorted, w.WALKINGS)
+	sorted := make([]Walk, len(w.Data))
+	copy(sorted, w.Data)
 	// Sort copy descending by distance
 	sort.Slice(sorted, func(i, j int) bool {
-		return sorted[i].DURATION > sorted[j].DURATION
+		return sorted[i].Duration > sorted[j].Duration
 	})
 	// Determine how many to print (up to 5)
 	n := 5
@@ -197,12 +197,12 @@ func (w *WalkData) PrintTopDuration() {
 	fmt.Print(color.Blue + color.Bold + "\nTop Duration \n" + color.Reset)
 	for i := 0; i < n; i++ {
 		walk := sorted[i]
-		number := fmt.Sprintf("ID: %d ", walk.ID)
+		number := fmt.Sprintf("ID: %d ", walk.Id)
 		floatDistance, _ := strconv.ParseFloat("3.14", 64)
-		distance := fmt.Sprintf("%s miles(%.2f km) | ", walk.DISTANCE, floatDistance*1.60934)
-		steps := fmt.Sprintf("%s steps | ", walk.STEPS)
-		calories := fmt.Sprintf("%s calories ", walk.CALORIES)
-		duration := fmt.Sprintf(" %s%s%s%s ", color.Yellow, color.Bold, walk.DURATION, color.Reset)
+		distance := fmt.Sprintf("%s miles(%.2f km) | ", walk.Distance, floatDistance*1.60934)
+		steps := fmt.Sprintf("%s steps | ", walk.Steps)
+		calories := fmt.Sprintf("%s calories ", walk.Calories)
+		duration := fmt.Sprintf(" %s%s%s%s ", color.Yellow, color.Bold, walk.Duration, color.Reset)
 		fmt.Println(number + distance + steps + calories + duration)
 	}
 }
@@ -210,16 +210,16 @@ func (w *WalkData) PrintTopDuration() {
 /* Other Stats */
 
 func (w *WalkData) PrintAllWalks() {
-	for i, walk := range w.WALKINGS {
+	for i, walk := range w.Data {
 		fmt.Printf(
 			"%d. ID:%d  Distance:%s  Duration:%s  Steps:%s  Calories:%s  Date:%s\n",
 			i+1,
-			walk.ID,
-			walk.DISTANCE,
-			walk.DURATION,
-			walk.STEPS,
-			walk.CALORIES,
-			walk.DATE,
+			walk.Id,
+			walk.Distance,
+			walk.Duration,
+			walk.Steps,
+			walk.Calories,
+			walk.Date,
 		)
 	}
 }
@@ -230,9 +230,9 @@ func (w *WalkData) NewID() int {
 
 	maxID := 0
 
-	for _, book := range w.WALKINGS {
-		if book.ID > maxID {
-			maxID = book.ID
+	for _, book := range w.Data {
+		if book.Id > maxID {
+			maxID = book.Id
 		}
 	}
 
@@ -267,11 +267,11 @@ func (w *WalkData) GetUserInput(suggestion Walk) (Walk, error) {
         label  string
         target *string
     }{
-        {"Distance:", &suggestion.DISTANCE},
-        {"Duration:", &suggestion.DURATION},
-        {"Steps:", &suggestion.STEPS},
-        {"Calories:", &suggestion.CALORIES},
-        {"Date:", &suggestion.DATE},
+        {"Distance:", &suggestion.Distance},
+        {"Duration:", &suggestion.Duration},
+        {"Steps:", &suggestion.Steps},
+        {"Calories:", &suggestion.Calories},
+        {"Date:", &suggestion.Date},
     }
 
     for _, p := range prompts {
@@ -283,12 +283,12 @@ func (w *WalkData) GetUserInput(suggestion Walk) (Walk, error) {
     }
 
     return Walk{
-        ID:       suggestion.ID,
-        DISTANCE: suggestion.DISTANCE,
-        DURATION: suggestion.DURATION,
-        STEPS:    suggestion.STEPS,
-        CALORIES: suggestion.CALORIES,
-        DATE:     suggestion.DATE,
+        Id:       suggestion.Id,
+        Distance: suggestion.Distance,
+        Duration: suggestion.Duration,
+        Steps:    suggestion.Steps,
+        Calories: suggestion.Calories,
+        Date:     suggestion.Date,
     }, nil
 }
 
@@ -316,8 +316,8 @@ func (w *WalkData) ReadFromFile(path string) error {
 }
 
 func (w *WalkData) findIndex(id int) (int, error) {
-	for i, walk := range w.WALKINGS {
-		if walk.ID == id {
+	for i, walk := range w.Data {
+		if walk.Id == id {
 			fmt.Println(walk)
 			return i, nil
 		}
@@ -326,12 +326,12 @@ func (w *WalkData) findIndex(id int) (int, error) {
 }
 
 func (w *WalkData) Undo() bool {
-	if len(w.WALKINGS) == 0 {
+	if len(w.Data) == 0 {
 		fmt.Println("No walks to undo.")
 		return false
 	}
 
-	lastWalk := w.WALKINGS[len(w.WALKINGS)-1]
+	lastWalk := w.Data[len(w.Data)-1]
 	fmt.Println(lastWalk)
 
 	answer, err := util.PromptWithSuggestion("Are you sure you want to delete?", "No")
@@ -340,7 +340,7 @@ func (w *WalkData) Undo() bool {
 	}
 
 	if strings.ToLower(answer) == "y" || strings.ToLower(answer) == "yes" {
-		w.WALKINGS = w.WALKINGS[:len(w.WALKINGS)-1]
+		w.Data = w.Data[:len(w.Data)-1]
 
 		if err := w.Save(); err != nil {
 			fmt.Println(color.Red+"Error saving data:"+color.Reset, err)
