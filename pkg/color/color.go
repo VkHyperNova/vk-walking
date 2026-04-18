@@ -1,5 +1,7 @@
 package color
 
+import "fmt"
+
 const (
 	Reset  = "\033[0m"
 	Red    = "\033[31m"
@@ -12,3 +14,11 @@ const (
 	Bold   = "\033[1m"
 	Italic = "\033[3m"
 )
+
+func PrintBoldBlue(text string) string {
+	return fmt.Sprintf(Blue + Bold + text + Reset)
+}
+
+func PrintBoldYellow(text string) string {
+	return fmt.Sprintf(Yellow + Bold + text + Reset)
+}

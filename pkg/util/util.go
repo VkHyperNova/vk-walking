@@ -7,12 +7,27 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"vk-walking/pkg/color"
 	"vk-walking/pkg/config"
 
 	"github.com/peterh/liner"
 )
+
+func TimeToSeconds(s string) int {
+    parts := strings.Split(s, ":")
+    h, m, sec := 0, 0, 0
+    if len(parts) == 3 {
+        h, _ = strconv.Atoi(parts[0])
+        m, _ = strconv.Atoi(parts[1])
+        sec, _ = strconv.Atoi(parts[2])
+    } else if len(parts) == 2 {
+        m, _ = strconv.Atoi(parts[0])
+        sec, _ = strconv.Atoi(parts[1])
+    }
+    return h*3600 + m*60 + sec
+}
 
 func ClearScreen() {
 
