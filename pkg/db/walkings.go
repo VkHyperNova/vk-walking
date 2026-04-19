@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 	"vk-walking/pkg/color"
 	"vk-walking/pkg/config"
@@ -29,9 +30,10 @@ type WalkData struct {
 func (w *WalkData) PrintCLI() {
 
 	// Program information
-	fmt.Println(color.Cyan + "------------------------" + color.Reset)
-	fmt.Println(color.Cyan + "VK-WALKING 1.0" + color.Reset)
-	fmt.Println(color.Cyan + "------------------------" + color.Reset)
+	fmt.Println(color.PrintBoldBlue("------------------------"))
+	fmt.Println(color.PrintBoldBlue("VK-WALKING 1.0"))
+	fmt.Println(color.PrintBoldBlue("------------------------"))
+	w.PrintLatest()
 }
 
 func (w *WalkData) Add() error {
@@ -101,6 +103,19 @@ func (w *WalkData) PrintAllWalks() {
 			walk.Steps,
 			walk.Calories,
 			walk.Date,
+		)
+	}
+}
+
+func(w *WalkData) PrintLatest() {
+	for i := 1; i < 4; i++ {
+
+		fmt.Printf("(ID:%s) Miles: %s | Steps: %s | Calories: %s | Time: %s\n",
+			color.PrintBoldYellow(strconv.Itoa((w.Data)[len(w.Data) - i].Id)),
+			(w.Data)[len(w.Data) - i].Distance,
+			(w.Data)[len(w.Data) - i].Steps,
+			(w.Data)[len(w.Data) - i].Calories,
+			(w.Data)[len(w.Data) - i].Duration,
 		)
 	}
 }
