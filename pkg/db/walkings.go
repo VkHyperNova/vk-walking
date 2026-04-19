@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"sort"
-	"strconv"
 	"strings"
 	"vk-walking/pkg/color"
 	"vk-walking/pkg/config"
@@ -31,14 +29,9 @@ type WalkData struct {
 func (w *WalkData) PrintCLI() {
 
 	// Program information
+	fmt.Println(color.Cyan + "------------------------" + color.Reset)
 	fmt.Println(color.Cyan + "VK-WALKING 1.0" + color.Reset)
 	fmt.Println(color.Cyan + "------------------------" + color.Reset)
-
-	w.SortDistance()
-	w.SortSteps()
-	w.SortCalories()
-	w.SortDuration()
-
 }
 
 func (w *WalkData) Add() error {
@@ -96,80 +89,6 @@ func (w *WalkData) Delete(id int) error {
 
 	return w.Save()
 }
-
-/* Top Stats */
-
-func printTopTen(sortedData []Walk, name string) {
-
-    fmt.Print(color.PrintBoldBlue("\n" + name + "\n"))
-
-    for i := 0; i < 10; i++ {
-        w := sortedData[i]
-        distanceToFloat, _ := strconv.ParseFloat(w.Distance, 64)
-        distanceInKilometer := distanceToFloat * 1.60934
-
-        highlight := func(field, value string) string {
-            if name == field {
-                return color.PrintBoldYellow(value)
-            }
-            return value
-        }
-
-        fmt.Printf("(ID:%d) Miles: %s (%.2f km) | Steps: %s | Calories: %s | Time: %s\n",
-            w.Id,
-            highlight("Distance", w.Distance),
-            distanceInKilometer,
-            highlight("Steps", w.Steps),
-            highlight("Calories", w.Calories),
-            highlight("Duration", w.Duration),
-        )
-    }
-}
-
-func (w *WalkData) sorted(less func(a, b Walk) bool) []Walk {
-    sortedData := make([]Walk, len(w.Data))
-    copy(sortedData, w.Data)
-    sort.Slice(sortedData, func(i, j int) bool {
-        return less(sortedData[i], sortedData[j])
-    })
-    return sortedData
-}
-
-func (w *WalkData) SortDistance() {
-    data := w.sorted(func(a, b Walk) bool {
-        af, _ := strconv.ParseFloat(a.Distance, 64)
-        bf, _ := strconv.ParseFloat(b.Distance, 64)
-        return af > bf
-    })
-    printTopTen(data, "Distance")
-}
-
-func (w *WalkData) SortSteps() {
-    data := w.sorted(func(a, b Walk) bool {
-        ai, _ := strconv.Atoi(a.Steps)
-        bi, _ := strconv.Atoi(b.Steps)
-        return ai > bi
-    })
-    printTopTen(data, "Steps")
-}
-
-func (w *WalkData) SortCalories() {
-    data := w.sorted(func(a, b Walk) bool {
-        ai, _ := strconv.Atoi(a.Calories)
-        bi, _ := strconv.Atoi(b.Calories)
-        return ai > bi
-    })
-    printTopTen(data, "Calories")
-}
-
-func (w *WalkData) SortDuration() {
-    data := w.sorted(func(a, b Walk) bool {
-        return util.TimeToSeconds(a.Duration) > util.TimeToSeconds(b.Duration)
-    })
-    printTopTen(data, "Duration")
-}
-
-/* Other Stats */
 
 func (w *WalkData) PrintAllWalks() {
 	for i, walk := range w.Data {

@@ -8,22 +8,22 @@ import (
 	"vk-walking/pkg/util"
 )
 
-func CommandLine(walkings *db.WalkData) {
+func CommandLine(w *db.WalkData) {
 	for {
-		walkings.PrintCLI()
+		w.PrintCLI()
 
 		var cmd string
-		var id int
+		var n int
 
 		fmt.Print("=> ")
 
-		fmt.Scanln(&cmd, &id)
+		fmt.Scanln(&cmd, &n)
 
 		cmd = strings.ToLower(cmd)
 
 		switch cmd {
 		case "a", "add":
-			if err := walkings.Add(); err != nil {
+			if err := w.Add(); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
 				fmt.Println(color.Yellow + "\nItem Added!" + color.Reset)
@@ -31,7 +31,7 @@ func CommandLine(walkings *db.WalkData) {
 			util.PressAnyKey()
 			util.ClearScreen()
 		case "u", "update":
-			if err := walkings.Update(id); err != nil {
+			if err := w.Update(n); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
 				fmt.Println(color.Yellow + "\nItem Updated!" + color.Reset)
@@ -39,7 +39,7 @@ func CommandLine(walkings *db.WalkData) {
 			util.PressAnyKey()
 			util.ClearScreen()
 		case "d", "delete":
-			if err := walkings.Delete(id); err != nil {
+			if err := w.Delete(n); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
 				fmt.Printf(color.Yellow + "\n Item Removed!" + color.Reset)
@@ -47,18 +47,27 @@ func CommandLine(walkings *db.WalkData) {
 			util.PressAnyKey()
 			util.ClearScreen()
 		case "undo":
-			walkings.Undo()
+			w.Undo()
 			util.ClearScreen()
 		case "showall":
 			util.ClearScreen()
-			walkings.PrintAllWalks()
+			w.PrintAllWalks()
 			util.PressAnyKey()
-
+		case "stats":
+			w.PrintStats(n)
+		case "distance":
+			w.PrintDistance(n)
+		case "steps":
+			w.PrintSteps(n)
+		case "calories":
+			w.PrintCalories(n)
+		case "duration":
+			w.PrintDuration(n)
 		case "q", "quit":
 			util.ClearScreen()
 			return
 		default:
-			fmt.Println("Unknown command. Try: add, update, delete, undo, showall, quit")
+			fmt.Println("Unknown command. Try: add, update, delete, undo, stats, showall, distance, steps, calories, duration, quit")
 			util.PressAnyKey()
 			util.ClearScreen()
 		}
