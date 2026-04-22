@@ -8,68 +8,61 @@ import (
 	"vk-walking/pkg/util"
 )
 
-func CommandLine(w *db.WalkData) {
+func Run(store *db.Store) {
 	for {
-		w.PrintCLI()
+		store.PrintDashboard()
 
-		var cmd string
-		var n int
+		var command string
+		var id int
 
 		fmt.Print("=> ")
 
-		fmt.Scanln(&cmd, &n)
+		fmt.Scanln(&command, &id)
 
-		cmd = strings.ToLower(cmd)
+		command = strings.ToLower(command)
 
-		switch cmd {
+		switch command {
 		case "a", "add":
-			if err := w.Add(); err != nil {
+			if err := store.Add(); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
-				fmt.Println(color.Yellow + "\nItem Added!" + color.Reset)
+				fmt.Println(color.Yellow + "\nAdded!" + color.Reset)
 			}
-			util.PressAnyKey()
-			util.ClearScreen()
 		case "u", "update":
-			if err := w.Update(n); err != nil {
+			if err := store.Update(id); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
-				fmt.Println(color.Yellow + "\nItem Updated!" + color.Reset)
+				fmt.Println(color.Yellow + "\nUpdated!" + color.Reset)
 			}
-			util.PressAnyKey()
-			util.ClearScreen()
 		case "d", "delete":
-			if err := w.Delete(n); err != nil {
+			if err := store.Delete(id); err != nil {
 				fmt.Println(color.Red+"Error:"+color.Reset, err)
 			} else {
-				fmt.Printf(color.Yellow + "\n Item Removed!" + color.Reset)
+				fmt.Println(color.Yellow + "\nRemoved!" + color.Reset)
 			}
-			util.PressAnyKey()
-			util.ClearScreen()
 		case "undo":
-			w.Undo()
-			util.ClearScreen()
-		case "showall":
-			util.ClearScreen()
-			w.PrintAllWalks()
-			util.PressAnyKey()
+			if err := store.Undo(); err != nil {
+				fmt.Println(err)
+			} else {
+				fmt.Println(color.Yellow + "\nUndone!" + color.Reset)
+			}
+		case "l", "list":
+			store.PrintAll()
 		case "stats":
-			w.PrintStats(n)
+			store.PrintStats(id)
 		case "distance":
-			w.PrintDistance(n)
+			store.PrintDistance(id)
 		case "steps":
-			w.PrintSteps(n)
+			store.PrintSteps(id)
 		case "calories":
-			w.PrintCalories(n)
+			store.PrintCalories(id)
 		case "duration":
-			w.PrintDuration(n)
+			store.PrintDuration(id)
 		case "q", "quit":
 			util.ClearScreen()
 			return
 		default:
-			fmt.Println("Unknown command. Try: add, update, delete, undo, stats, showall, distance, steps, calories, duration, quit")
-			util.PressAnyKey()
-			util.ClearScreen()
+			fmt.Println("Unknown command. Try: add, update, delete, undo, stats, list, distance, steps, calories, duration, quit")
 		}
 	}
 }

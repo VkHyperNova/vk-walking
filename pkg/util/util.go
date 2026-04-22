@@ -15,33 +15,33 @@ import (
 	"github.com/peterh/liner"
 )
 
-func TimeToSeconds(s string) int {
-    parts := strings.Split(s, ":")
-    h, m, sec := 0, 0, 0
-    if len(parts) == 3 {
-        h, _ = strconv.Atoi(parts[0])
-        m, _ = strconv.Atoi(parts[1])
-        sec, _ = strconv.Atoi(parts[2])
-    } else if len(parts) == 2 {
-        m, _ = strconv.Atoi(parts[0])
-        sec, _ = strconv.Atoi(parts[1])
-    }
-    return h*3600 + m*60 + sec
+func TimeToSeconds(duration string) int {
+	parts := strings.Split(duration, ":")
+	h, m, sec := 0, 0, 0
+	if len(parts) == 3 {
+		h, _ = strconv.Atoi(parts[0])
+		m, _ = strconv.Atoi(parts[1])
+		sec, _ = strconv.Atoi(parts[2])
+	} else if len(parts) == 2 {
+		m, _ = strconv.Atoi(parts[0])
+		sec, _ = strconv.Atoi(parts[1])
+	}
+	return h*3600 + m*60 + sec
 }
 
 func ClearScreen() {
 
-	var cmd *exec.Cmd
+	var c *exec.Cmd
 
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/c", "cls")
+		c = exec.Command("cmd", "/c", "cls")
 	} else {
-		cmd = exec.Command("clear")
+		c = exec.Command("clear")
 	}
 
-	cmd.Stdout = os.Stdout
+	c.Stdout = os.Stdout
 
-	if err := cmd.Run(); err != nil {
+	if err := c.Run(); err != nil {
 		fmt.Fprintln(os.Stderr, "Error clearing screen:", err)
 	}
 }
@@ -59,7 +59,7 @@ func PromptWithSuggestion(name string, suggestion string) (string, error) {
 	return input, nil
 }
 
-func HardDriveMountCheck() bool {
+func isMounted() bool {
 	if runtime.GOOS != "linux" {
 		fmt.Println("This program only works on Linux.")
 		return false
@@ -91,40 +91,6 @@ func HardDriveMountCheck() bool {
 	return false
 }
 
-func Input(prompt string) string {
-
-	line := liner.NewLiner()
-	defer line.Close()
-
-	userInput, err := line.Prompt(prompt)
-	if err != nil {
-		panic(err)
-	}
-	return userInput
-}
-
-func PressAnyKey() {
-	fmt.Print()
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-}
-
-func Contains(a []int, x int) bool {
-	for _, v := range a {
-		if v == x {
-			return true
-		}
-	}
-	return false
-}
-
-func AppendIfMissing(a []int, x int) []int {
-	if !Contains(a, x) {
-		a = append(a, x)
-	}
-	return a
-}
-
 func ensureFile(path string, content string) error {
 
 	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
@@ -140,15 +106,15 @@ func ensureFile(path string, content string) error {
 	return nil
 }
 
-func CreateFilesAndFolders() error {
-	
+func InitStorage() error {
+
 	if err := ensureFile(config.LocalFile, config.DefaultContent); err != nil {
 		return err
 	}
 
-	if !HardDriveMountCheck() {
-		input := Input("Do you want to continue? (y/n) ")
-		if strings.ToLower(strings.TrimSpace(input)) != "y" {
+	if !isMounted() {
+		input := Confirm()
+		if !input {
 			fmt.Println("Exiting program.")
 			os.Exit(0)
 		}
@@ -163,22 +129,15 @@ func CreateFilesAndFolders() error {
 
 func Confirm() bool {
 
-	input := Prompt("(y/n): ")
+	input, err := PromptWithSuggestion("Do you want to continue (y/n): ", "n")
+	if err != nil {
+		fmt.Print(err)
+		return false
+	}
 
 	if input == "n" || input == "no" || input == "q" {
 		fmt.Println(color.Red, "Aborted!", color.Reset)
 		return false
 	}
 	return true
-}
-
-func Prompt(Question string) string {
-
-	fmt.Print(color.Cyan, Question, color.Reset)
-
-	var input string
-
-	fmt.Scanln(&input)
-
-	return input
 }

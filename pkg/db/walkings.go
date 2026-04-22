@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"strconv"
-	"strings"
 	"vk-walking/pkg/color"
 	"vk-walking/pkg/config"
 	"vk-walking/pkg/util"
@@ -21,13 +20,13 @@ type Walk struct {
 	Date     string `json:"date"`
 }
 
-type WalkData struct {
-	Data []Walk `json:"data"`
+type Store struct {
+	Walks []Walk `json:"walks"`
 }
 
 /* Main Functions */
 
-func (w *WalkData) PrintCLI() {
+func (w *Store) PrintDashboard() {
 
 	// Program information
 	fmt.Println(color.PrintBoldBlue("------------------------"))
@@ -36,48 +35,48 @@ func (w *WalkData) PrintCLI() {
 	w.PrintLatest()
 }
 
-func (w *WalkData) Add() error {
+func (w *Store) Add() error {
 
-	newWalk, err := w.GetUserInput(Walk{})
+	newWalk, err := w.promptWalkInput(Walk{})
 	if err != nil {
 		return err
 	}
 
-	newWalk.Id = w.NewID()
+	newWalk.Id = w.nextID()
 
-	w.Data = append(w.Data, newWalk)
+	w.Walks = append(w.Walks, newWalk)
 
-	return w.Save()
+	return w.saveToFile()
 }
 
-func (w *WalkData) Update(id int) error {
+func (w *Store) Update(id int) error {
 
 	if id <= 0 {
 		return fmt.Errorf("invalid ID: %d", id)
 	}
 
-	index, err := w.findIndex(id)
+	index, err := w.indexOf(id)
 	if err != nil {
 		return err
 	}
 
-	updated, err := w.GetUserInput((w.Data)[index])
+	updated, err := w.promptWalkInput((w.Walks)[index])
 	if err != nil {
 		return err
 	}
 
-	(w.Data)[index] = updated
+	(w.Walks)[index] = updated
 
-	return w.Save()
+	return w.saveToFile()
 }
 
-func (w *WalkData) Delete(id int) error {
+func (w *Store) Delete(id int) error {
 
 	if id <= 0 {
 		return fmt.Errorf("invalid ID: %d", id)
 	}
 
-	index, err := w.findIndex(id)
+	index, err := w.indexOf(id)
 	if err != nil {
 		return err
 	}
@@ -87,13 +86,13 @@ func (w *WalkData) Delete(id int) error {
 		return fmt.Errorf("Abort")
 	}
 
-	w.Data = append((w.Data)[:index], (w.Data)[index+1:]...)
+	w.Walks = append((w.Walks)[:index], (w.Walks)[index+1:]...)
 
-	return w.Save()
+	return w.saveToFile()
 }
 
-func (w *WalkData) PrintAllWalks() {
-	for i, walk := range w.Data {
+func (w *Store) PrintAll() {
+	for i, walk := range w.Walks {
 		fmt.Printf(
 			"%d. ID:%d  Distance:%s  Duration:%s  Steps:%s  Calories:%s  Date:%s\n",
 			i+1,
@@ -107,26 +106,26 @@ func (w *WalkData) PrintAllWalks() {
 	}
 }
 
-func(w *WalkData) PrintLatest() {
+func (w *Store) PrintLatest() {
 	for i := 1; i < 4; i++ {
 
 		fmt.Printf("(ID:%s) Miles: %s | Steps: %s | Calories: %s | Time: %s\n",
-			color.PrintBoldYellow(strconv.Itoa((w.Data)[len(w.Data) - i].Id)),
-			(w.Data)[len(w.Data) - i].Distance,
-			(w.Data)[len(w.Data) - i].Steps,
-			(w.Data)[len(w.Data) - i].Calories,
-			(w.Data)[len(w.Data) - i].Duration,
+			color.PrintBoldYellow(strconv.Itoa((w.Walks)[len(w.Walks)-i].Id)),
+			(w.Walks)[len(w.Walks)-i].Distance,
+			(w.Walks)[len(w.Walks)-i].Steps,
+			(w.Walks)[len(w.Walks)-i].Calories,
+			(w.Walks)[len(w.Walks)-i].Duration,
 		)
 	}
 }
 
 /* Dir Functions */
 
-func (w *WalkData) NewID() int {
+func (w *Store) nextID() int {
 
 	maxID := 0
 
-	for _, book := range w.Data {
+	for _, book := range w.Walks {
 		if book.Id > maxID {
 			maxID = book.Id
 		}
@@ -135,7 +134,7 @@ func (w *WalkData) NewID() int {
 	return maxID + 1
 }
 
-func (w *WalkData) Save() error {
+func (w *Store) saveToFile() error {
 
 	// Format JSON
 	walks, err := json.MarshalIndent(w, "", "  ")
@@ -158,7 +157,7 @@ func (w *WalkData) Save() error {
 	return nil
 }
 
-func (w *WalkData) GetUserInput(suggestion Walk) (Walk, error) {
+func (w *Store) promptWalkInput(suggestion Walk) (Walk, error) {
 	prompts := []struct {
 		label  string
 		target *string
@@ -188,7 +187,7 @@ func (w *WalkData) GetUserInput(suggestion Walk) (Walk, error) {
 	}, nil
 }
 
-func (w *WalkData) ReadFromFile(path string) error {
+func (w *Store) LoadFromFile(path string) error {
 
 	// Open file
 	file, err := os.Open(path)
@@ -211,8 +210,8 @@ func (w *WalkData) ReadFromFile(path string) error {
 	return nil
 }
 
-func (w *WalkData) findIndex(id int) (int, error) {
-	for i, walk := range w.Data {
+func (w *Store) indexOf(id int) (int, error) {
+	for i, walk := range w.Walks {
 		if walk.Id == id {
 			fmt.Println(walk)
 			return i, nil
@@ -221,32 +220,23 @@ func (w *WalkData) findIndex(id int) (int, error) {
 	return -1, fmt.Errorf("item with ID %d not found", id)
 }
 
-func (w *WalkData) Undo() bool {
-	if len(w.Data) == 0 {
-		fmt.Println("No walks to undo.")
-		return false
+func (w *Store) Undo() error {
+	if len(w.Walks) == 0 {
+		return fmt.Errorf("no walks to undo.")
 	}
 
-	lastWalk := w.Data[len(w.Data)-1]
+	lastWalk := w.Walks[len(w.Walks)-1]
 	fmt.Println(lastWalk)
 
-	answer, err := util.PromptWithSuggestion("Are you sure you want to delete?", "No")
-	if err != nil {
-		fmt.Print(err)
+	confirm := util.Confirm()
+	if !confirm {
+		return fmt.Errorf("Abort")
 	}
 
-	if strings.ToLower(answer) == "y" || strings.ToLower(answer) == "yes" {
-		w.Data = w.Data[:len(w.Data)-1]
+	w.Walks = w.Walks[:len(w.Walks)-1]
 
-		if err := w.Save(); err != nil {
-			fmt.Println(color.Red+"Error saving data:"+color.Reset, err)
-			return false
-		}
-
-		fmt.Println(color.Yellow + "Last walk removed." + color.Reset)
-		return true
+	if err := w.saveToFile(); err != nil {
+		return err
 	}
-
-	fmt.Println("Undo cancelled.")
-	return false
+	return nil
 }

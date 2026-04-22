@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"os"
 	"vk-walking/pkg/cmd"
 	"vk-walking/pkg/config"
 	"vk-walking/pkg/db"
@@ -11,25 +9,16 @@ import (
 )
 
 func main() {
+	if err := util.InitStorage(); err != nil {
+		log.Fatalf("Error creating files/folders: %v", err)
 
-	if err := util.CreateFilesAndFolders(); err != nil {
-		fmt.Println("Error creating files/folders:", err)
-		os.Exit(1)
 	}
 
-	// Initialize Walkings database
-	w := db.WalkData{}
-
-	// Reload Database
-	err := w.ReadFromFile(config.LocalFile)
+	store := db.Store{}
+	err := store.LoadFromFile(config.LocalFile)
 	if err != nil {
 		log.Fatalf("Fatal error: failed to load walkings database: %v", err)
 	}
 
-	// Start
-	cmd.CommandLine(&w)
+	cmd.Run(&store)
 }
-
-
-
-

@@ -12,25 +12,25 @@ import (
 /* Top Stats */
 
 type sortConfig struct {
-	name string
+	field string
 	less func(a, b Walk) bool
 }
 
-func (w *WalkData) printSorted(number int, cfg sortConfig) {
+func (w *Store) printTopN(number int, cfg sortConfig) {
 	if number == 0 {
 		number = 5
 	}
-	fmt.Println(color.PrintBoldYellow("\n" + strings.ToLower(cfg.name) + " " + strconv.Itoa(number)))
-	data := w.sorted(cfg.less)
-	printTopTen(data, cfg.name, number)
+	fmt.Println(color.PrintBoldYellow("\n" + strings.ToLower(cfg.field) + " " + strconv.Itoa(number)))
+	walks := w.sortBy(cfg.less)
+	printRows(walks, cfg.field, number)
 }
 
-func printTopTen(sortedData []Walk, name string, number int) {
+func printRows(walks []Walk, name string, n int) {
 	fmt.Print(color.PrintBoldBlue("\n" + name + "\n"))
-	for i := 0; i < number; i++ {
-		w := sortedData[i]
-		distanceToFloat, _ := strconv.ParseFloat(w.Distance, 64)
-		distanceInKilometer := distanceToFloat * 1.60934
+	for i := 0; i < n; i++ {
+		w := walks[i]
+		miles, _ := strconv.ParseFloat(w.Distance, 64)
+		km := miles * 1.60934
 		highlight := func(field, value string) string {
 			if name == field {
 				return color.PrintBoldYellow(value)
@@ -40,7 +40,7 @@ func printTopTen(sortedData []Walk, name string, number int) {
 		fmt.Printf("(ID:%d) Miles: %s (%.2f km) | Steps: %s | Calories: %s | Time: %s\n",
 			w.Id,
 			highlight("Distance", w.Distance),
-			distanceInKilometer,
+			km,
 			highlight("Steps", w.Steps),
 			highlight("Calories", w.Calories),
 			highlight("Duration", w.Duration),
@@ -48,18 +48,18 @@ func printTopTen(sortedData []Walk, name string, number int) {
 	}
 }
 
-func (w *WalkData) sorted(less func(a, b Walk) bool) []Walk {
-	sortedData := make([]Walk, len(w.Data))
-	copy(sortedData, w.Data)
-	sort.Slice(sortedData, func(i, j int) bool {
-		return less(sortedData[i], sortedData[j])
+func (w *Store) sortBy(less func(a, b Walk) bool) []Walk {
+	walks := make([]Walk, len(w.Walks))
+	copy(walks, w.Walks)
+	sort.Slice(walks, func(i, j int) bool {
+		return less(walks[i], walks[j])
 	})
-	return sortedData
+	return walks
 }
 
-func (w *WalkData) PrintDistance(number int) {
-	w.printSorted(number, sortConfig{
-		name: "Distance",
+func (w *Store) PrintDistance(n int) {
+	w.printTopN(n, sortConfig{
+		field: "Distance",
 		less: func(a, b Walk) bool {
 			af, _ := strconv.ParseFloat(a.Distance, 64)
 			bf, _ := strconv.ParseFloat(b.Distance, 64)
@@ -68,9 +68,9 @@ func (w *WalkData) PrintDistance(number int) {
 	})
 }
 
-func (w *WalkData) PrintSteps(number int) {
-	w.printSorted(number, sortConfig{
-		name: "Steps",
+func (w *Store) PrintSteps(n int) {
+	w.printTopN(n, sortConfig{
+		field: "Steps",
 		less: func(a, b Walk) bool {
 			ai, _ := strconv.Atoi(a.Steps)
 			bi, _ := strconv.Atoi(b.Steps)
@@ -79,9 +79,9 @@ func (w *WalkData) PrintSteps(number int) {
 	})
 }
 
-func (w *WalkData) PrintCalories(number int) {
-	w.printSorted(number, sortConfig{
-		name: "Calories",
+func (w *Store) PrintCalories(n int) {
+	w.printTopN(n, sortConfig{
+		field: "Calories",
 		less: func(a, b Walk) bool {
 			ai, _ := strconv.Atoi(a.Calories)
 			bi, _ := strconv.Atoi(b.Calories)
@@ -90,22 +90,22 @@ func (w *WalkData) PrintCalories(number int) {
 	})
 }
 
-func (w *WalkData) PrintDuration(number int) {
-	w.printSorted(number, sortConfig{
-		name: "Duration",
+func (w *Store) PrintDuration(n int) {
+	w.printTopN(n, sortConfig{
+		field: "Duration",
 		less: func(a, b Walk) bool {
 			return util.TimeToSeconds(a.Duration) > util.TimeToSeconds(b.Duration)
 		},
 	})
 }
 
-func (w *WalkData) PrintStats(number int) {
-	if number == 0 {
-		number = 5
+func (w *Store) PrintStats(n int) {
+	if n == 0 {
+		n = 5
 	}
-	fmt.Println(color.PrintBoldYellow("\nstats " + strconv.Itoa(number)))
-	w.PrintDistance(number)
-	w.PrintSteps(number)
-	w.PrintCalories(number)
-	w.PrintDuration(number)
+	fmt.Println(color.PrintBoldYellow("\nstats " + strconv.Itoa(n)))
+	w.PrintDistance(n)
+	w.PrintSteps(n)
+	w.PrintCalories(n)
+	w.PrintDuration(n)
 }
