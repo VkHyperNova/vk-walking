@@ -107,7 +107,7 @@ func (w *Store) PrintAll() {
 }
 
 func (w *Store) PrintLatest() {
-	for i := 1; i < 4; i++ {
+	for i := 3; i > 0; i-- {
 
 		fmt.Printf("(ID:%s) Miles: %s | Steps: %s | Calories: %s | Time: %s\n",
 			color.PrintBoldYellow(strconv.Itoa((w.Walks)[len(w.Walks)-i].Id)),
