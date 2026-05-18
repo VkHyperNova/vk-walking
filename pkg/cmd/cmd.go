@@ -58,11 +58,27 @@ func Run(store *db.Store) {
 			store.PrintCalories(id)
 		case "duration":
 			store.PrintDuration(id)
+		case "unmount":
+			if err := util.UnmountDrive(); err != nil {
+				fmt.Println(err)
+			}
+			util.PressAnyKey()
+
+		case "import", "i":
+			if err := store.Import(); err != nil {
+				fmt.Println(err)
+			}
+			util.PressAnyKey()
+		case "export", "e":
+			if err := store.Export(); err != nil {
+				fmt.Println(err)
+			}
+			util.PressAnyKey()
 		case "q", "quit":
 			util.ClearScreen()
 			return
 		default:
-			fmt.Println("Unknown command. Try: add, update, delete, undo, stats, list, distance, steps, calories, duration, quit")
+			fmt.Println("Unknown command. Try: add, update, delete, undo, stats, list, distance, steps, calories, duration, unmount, import, export, quit")
 		}
 	}
 }

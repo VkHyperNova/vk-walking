@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	if err := util.InitStorage(); err != nil {
+	if err := util.InitLocalStorage(); err != nil {
 		log.Fatalf("Error creating files/folders: %v", err)
 
 	}

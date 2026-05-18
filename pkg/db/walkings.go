@@ -119,6 +119,75 @@ func (w *Store) PrintLatest() {
 	}
 }
 
+func (w *Store) Export() error {
+
+	input, err := util.PromptWithSuggestion("Export db to d drive? (y/n) ", "n")
+	if err != nil {
+		return err
+	}
+
+	if input == "y" || input == "yes" {
+
+		if err := util.InitBackupStorage(); err != nil {
+			return err
+		}
+
+		if err := w.LoadFromFile(config.LocalFile); err != nil {
+			return fmt.Errorf("load from file: %w", err)
+		}
+
+		finance, err := json.MarshalIndent(w, "", "  ")
+		if err != nil {
+			return err
+		}
+
+		if err := os.WriteFile(config.BackupFile, finance, 0644); err != nil {
+			return err
+		}
+
+		fmt.Printf("Database exported to %s\nPress Enter!", config.BackupFile)
+		return nil
+	}
+
+	fmt.Println("Export canceled!")
+	return nil
+}
+
+func (w *Store) Import() error {
+
+	input, err := util.PromptWithSuggestion("Import db from d drive? (y/n) ", "n")
+	if err != nil {
+		return err
+	}
+
+	if input == "y" || input == "yes" {
+
+		if err := util.InitBackupStorage(); err != nil {
+			return err
+		}
+
+		if err := w.LoadFromFile(config.BackupFile); err != nil {
+			return fmt.Errorf("load from file: %w", err)
+		}
+
+		finance, err := json.MarshalIndent(w, "", "  ")
+		if err != nil {
+			return err
+		}
+
+		if err := os.WriteFile(config.LocalFile, finance, 0644); err != nil {
+			return err
+		}
+
+		fmt.Printf("Database imported from %s\nPress Enter!", config.BackupFile)
+		return nil
+	}
+
+	fmt.Println("Import canceled!")
+
+	return nil
+}
+
 /* Dir Functions */
 
 func (w *Store) nextID() int {
@@ -136,22 +205,30 @@ func (w *Store) nextID() int {
 
 func (w *Store) saveToFile() error {
 
+	copySlice := make([]Walk, len(w.Walks))
+	copy(copySlice, w.Walks)
+	copyQuotes := Store{Walks: copySlice}
+
 	// Format JSON
-	walks, err := json.MarshalIndent(w, "", "  ")
+	byteValue, err := json.MarshalIndent(copyQuotes, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	// Save
-	err = os.WriteFile(config.LocalFile, walks, 0644)
-	if err != nil {
+	// Save local
+		if err := os.WriteFile(config.LocalFile, byteValue, 0644); err != nil {
 		return err
 	}
 
 	// Save Backup
-	err = os.WriteFile(config.BackupFile, walks, 0644)
-	if err != nil {
-		return err
+	if err := util.InitBackupStorage(); err != nil {
+		fmt.Println(color.Yellow + "Backup init failed: " + err.Error() + color.Reset)
+		return nil // or return err, depending on your needs
+	}
+
+	if err := os.WriteFile(config.BackupFile, byteValue, 0644); err != nil {
+		fmt.Println(color.Yellow + "Backup write failed: " + err.Error() + color.Reset)
+		return nil // same decision here
 	}
 
 	return nil
