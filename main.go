@@ -25,8 +25,8 @@ const (
 	driveMountPoint = "/media/veikko/VK DATA"
 	file            = "walkings.json"
 	baseDB          = "WALKINGS"
-	// baseLocal = "DATABASES"
-	baseLocal = "DEVELOPMENT"
+	baseLocal       = "DATABASES"
+	// baseLocal = "DEVELOPMENT"
 )
 
 var LocalFile = filepath.Join(baseLocal, baseDB, file)
