@@ -198,7 +198,7 @@ func promptValid(label, current string, validate func(string) error) (string, er
 func promptWalkInput(w Walk) (Walk, error) {
 	var err error
 
-	if w.Distance, err = promptValid("Distance (mi):", w.Distance, validateNumber); err != nil {
+	if w.Distance, err = promptValid("Distance (km):", w.Distance, validateNumber); err != nil {
 		return Walk{}, err
 	}
 	if w.Duration, err = promptValid("Duration (H:MM:SS):", w.Duration, validateDuration); err != nil {
