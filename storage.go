@@ -29,7 +29,7 @@ func (w *Walks) Save() error {
 
 	// Backup is best-effort and never fails the save.
 	if err := w.backup(data); err != nil {
-		fmt.Println(Yellow + "Backup failed: " + err.Error() + Reset)
+		notice("Backup failed: " + err.Error())
 	}
 	return nil
 }
@@ -39,6 +39,7 @@ func (w *Walks) Load(source string) error {
 
 	// No file yet: start with empty data
 	if errors.Is(err, os.ErrNotExist) {
+		notice("No data file found at " + source + ", starting empty")
 		return nil
 	}
 	if err != nil {

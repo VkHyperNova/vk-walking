@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -30,10 +28,20 @@ func (w *Walks) Add() error {
 	if err != nil {
 		return err
 	}
+
 	walk.Id = w.nextID()
+
 	walk.Date = time.Now().Format("02-01-2006")
+
 	w.Walks = append(w.Walks, walk)
-	return w.Save()
+
+	if err := w.Save(); err != nil {
+		return err
+	}
+
+	notice(fmt.Sprintf("Added walk #%d", walk.Id))
+
+	return nil
 }
 
 func (w *Walks) Update(idStr string) error {
@@ -52,9 +60,20 @@ func (w *Walks) Update(idStr string) error {
 		return err
 	}
 
+	if updated == w.Walks[index] {
+		notice("No changes")
+		return nil
+	}
+
 	w.Walks[index] = updated
 
-	return w.Save()
+	if err := w.Save(); err != nil {
+		return err
+	}
+
+	notice(fmt.Sprintf("Updated walk #%d", id))
+
+	return nil
 }
 
 func (w *Walks) Delete(idStr string) error {
@@ -75,17 +94,25 @@ func (w *Walks) Delete(idStr string) error {
 
 	answer, err := stdin.ReadString('\n')
 	if err != nil || strings.ToLower(strings.TrimSpace(answer)) != "y" {
-		return errors.New("delete canceled")
+		notice("Delete canceled")
+		return nil
 	}
 
 	w.Walks = append(w.Walks[:index], w.Walks[index+1:]...)
 
-	return w.Save()
+	if err := w.Save(); err != nil {
+		return err
+	}
+
+	notice(fmt.Sprintf("Deleted walk #%d", id))
+
+	return nil
 }
 
 func (w *Walks) Undo() error {
 	if len(w.Walks) == 0 {
-		return errors.New("no walks to undo")
+		notice("No walks to undo")
+		return nil
 	}
 
 	// Show what will be removed and ask for confirmation
@@ -93,14 +120,21 @@ func (w *Walks) Undo() error {
 	fmt.Printf("Remove last walk #%d (%s, %s, %s)? (y/n): ",
 		last.Id, last.Date, last.Distance, last.Duration)
 
-	answer, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	answer, err := stdin.ReadString('\n')
 	if err != nil || strings.ToLower(strings.TrimSpace(answer)) != "y" {
-		return errors.New("undo canceled")
+		notice("Undo canceled")
+		return nil
 	}
 
 	w.Walks = w.Walks[:len(w.Walks)-1]
 
-	return w.Save()
+	if err := w.Save(); err != nil {
+		return err
+	}
+
+	notice(fmt.Sprintf("Undone walk #%d", last.Id))
+
+	return nil
 }
 
 /* Helper Functions */
@@ -109,9 +143,9 @@ func (w *Walks) nextID() int {
 
 	maxID := 0
 
-	for _, book := range w.Walks {
-		if book.Id > maxID {
-			maxID = book.Id
+	for _, walk := range w.Walks {
+		if walk.Id > maxID {
+			maxID = walk.Id
 		}
 	}
 
@@ -129,23 +163,10 @@ func parseID(s string) (int, error) {
 func (w *Walks) indexOf(id int) (int, error) {
 	for i, walk := range w.Walks {
 		if walk.Id == id {
-			fmt.Println(walk)
 			return i, nil
 		}
 	}
 	return -1, fmt.Errorf("item with ID %d not found", id)
-}
-
-var stdin = bufio.NewReader(os.Stdin)
-
-func prompt(label string) (string, error) {
-	fmt.Print(label + " ")
-	answer, err := stdin.ReadString('\n')
-	if err != nil {
-		return "", err
-	}
-	// Accept "4,8" as "4.8"
-	return strings.ReplaceAll(strings.TrimSpace(answer), ",", "."), nil
 }
 
 func promptValid(label, current string, validate func(string) error) (string, error) {

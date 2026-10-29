@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -18,9 +19,7 @@ const (
 	Gray   = "\033[37m"
 	Bold   = "\033[1m"
 	Italic = "\033[3m"
-)
 
-const (
 	driveLabel      = "VK DATA"
 	driveMountPoint = "/media/veikko/VK DATA"
 	file            = "walkings.json"
@@ -29,8 +28,15 @@ const (
 	// baseLocal = "DEVELOPMENT"
 )
 
-var LocalFile = filepath.Join(baseLocal, baseDB, file)
-var BackupFile = filepath.Join(driveMountPoint, baseLocal, baseDB, file)
+var (
+	stdin      = bufio.NewReader(os.Stdin)
+	LocalFile  = filepath.Join(baseLocal, baseDB, file)
+	BackupFile = filepath.Join(driveMountPoint, baseLocal, baseDB, file)
+)
+
+var notices []string
+
+func notice(msg string) { notices = append(notices, msg) }
 
 const usage = Bold + "walks" + Reset + ` - walking tracker
 
@@ -85,6 +91,10 @@ func main() {
 	}
 
 	w.Report()
+
+	for _, n := range notices {
+		fmt.Println(Yellow + n + Reset)
+	}
 
 	if err != nil {
 		fmt.Printf("%serror: %v%s\n", Red, err, Reset)
