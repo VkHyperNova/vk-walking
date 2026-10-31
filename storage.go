@@ -28,7 +28,7 @@ func (w *Walks) Save() error {
 	}
 
 	// Backup is best-effort and never fails the save.
-	if err := w.backup(data); err != nil {
+	if err := backup(data); err != nil {
 		notice("Backup failed: " + err.Error())
 	}
 	return nil
@@ -55,7 +55,7 @@ func (w *Walks) Load(source string) error {
 
 /* Helper Functions */
 
-func (w *Walks) backup(data []byte) error {
+func backup(data []byte) error {
 	if err := mountBackup(); err != nil {
 		return fmt.Errorf("mount drive: %w", err)
 	}
